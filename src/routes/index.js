@@ -7,7 +7,7 @@ import VerifyInvite from '../pages/verify-invite/VerifyInvite'
 import VerifyLink from '../pages/verify-link/VerifyLink'
 import PayGradesScreen from '../pages/pay-grades/PayGrades'
 import PayGradesDetailScreen from '../pages/pay-grades/PayGradesDetail'
-import EmployeesScreen from '../pages/employee/Employee'
+import EmployeesScreen from '../pages/employees/Employees'
 
 import PAGES from './constants'
 import { MainRoutes } from './MainRoutes'
@@ -34,7 +34,7 @@ export const Routes = () => {
             <Route path={PAGES.verifyLink} component={VerifyLink} exact />
             <Route path={PAGES.payGrades} component={PayGradesScreen} exact/>
             <Route path={PAGES.payGradesDetail} component={PayGradesDetailScreen} exact/>
-            <Route path={PAGES.employees} component={EmployeesScreen}/>
+            <Route path={PAGES.employees} component={EmployeesScreen} exact/>
             {/* <Route path={PAGES.payGradesDetail1} component={PayGradesDetail01Screen} exact/> */}
 
             {!loading ? (

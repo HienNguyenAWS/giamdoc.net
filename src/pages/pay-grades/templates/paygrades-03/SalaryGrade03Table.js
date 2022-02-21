@@ -1,20 +1,22 @@
 /* eslint-disable indent */
-import { ExclamationCircleOutlined, MoreOutlined, EditOutlined } from '@ant-design/icons'
+import { EditOutlined, ExclamationCircleOutlined, MoreOutlined, SettingOutlined } from '@ant-design/icons'
 import { Button, Form, Input, Modal, Popover, Select, Table } from 'antd'
 import { ReactComponent as AddActiveIcon } from 'assets/images/add-active.svg'
 import { ReactComponent as AddIcon } from 'assets/images/add.svg'
-import { ReactComponent as CloseIcon } from './icons/close.svg'
-import { ReactComponent as CheckIcon } from './icons/check.svg'
 import { ReactComponent as BonusActiveIcon } from 'assets/images/topnav/bonus-active.svg'
-import withActiveIcon from 'components/withHoverIcon'
-import { rowsMock } from 'pages/pay-grades/initialize-data/_mock03'
-import React, { useLayoutEffect, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import clsx from 'clsx'
+import withActiveIcon from 'components/withHoverIcon'
+import { rowsMock, salary as _salary } from 'pages/pay-grades/initialize-data/_mock03'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { formatCurrency } from 'utils/PayGradesHelper'
-import StartingSalaryDropdown from './actions/StartingSalaryDropdown'
+import SalaryDropdown from './actions/SalaryDropdown'
+import { ReactComponent as CheckIcon } from './icons/check.svg'
+import { ReactComponent as CloseIcon } from './icons/close.svg'
 import { deletePayGrade } from './PayGrades03.action'
 import styles from './SalaryGrade03Table.module.scss'
+import ModalConfiguration3 from 'components/modal-configuration/ModalConfiguration3'
+import NBL03 from 'components/modal-configuration/ModalForms/NBL03'
 
 const WithActiveAddIcon = withActiveIcon(AddIcon)
 
@@ -37,7 +39,7 @@ const createColumnsMock = ({ level, amplitude, coefficient }) => {
     return columnsMock
 }
 
-const createFirstRow = ({ salary, columnsData, titleTable }) => {
+const createFirstRow = ({ salary, columnsData, titleTable, amplitudeAndCoefficient, setAmplitudeAndCoefficient }) => {
     let firstRow = {}
 
     columnsData.forEach(({ key, value }) => {
@@ -62,22 +64,17 @@ const createFirstRow = ({ salary, columnsData, titleTable }) => {
         key: 0,
         code: titleTable,
         title: '',
-        rules: salary,
-        amplitudeAndCoefficient: (
-            <div className={styles.lightColor}>
-                <div>Biên độ</div>
-                <div>Hệ số</div>
-            </div>
-        ),
+        rules: salary.value,
+        amplitudeAndCoefficient,
         ...firstRow
     }
 }
 
-const createSummaryRow = ({ columnsData, rows }) => {
+const createSummaryRow = ({ columnsData, rows, summaryTable, setSummaryTable }) => {
     const totalSalaryByKey = ({ rows, key }) =>
         rows.reduce((sum, row) => {
             for (const rowKey in row) {
-                if (rowKey === key) {
+                if (rowKey === key && !['lcb', 'lkpi'].includes(row.rules.key)) {
                     sum += row[key].value
                 }
             }
@@ -87,7 +84,7 @@ const createSummaryRow = ({ columnsData, rows }) => {
     let summaryRow = {
         key: rows.length + 1,
         code: 'QLDH',
-        title: 'Tổng lương và phụ cấp',
+        title: summaryTable,
         rules: '',
         amplitudeAndCoefficient: ''
     }
@@ -105,29 +102,68 @@ const createSummaryRow = ({ columnsData, rows }) => {
     return summaryRow
 }
 
-const calcSalaryByRule = ({ salary, row, columnData }) => {
-    switch (row.rules) {
-        case 'LVT':
-        case 'LKĐ / hoặc LTT':
-            return {
-                [columnData.key]: {
-                    label: formatCurrency(columnData.value.coefficient * salary),
-                    value: columnData.value.coefficient * salary
-                }
+const mapRowsDataByConfig = ({ salary, salaryConfigs, rowsData }) => {
+    const defaultSalaryKeys = ['lcb', 'lkpi', 'lvt']
+
+    return rowsData.map(rowData => {
+        switch (rowData.rules.key) {
+            case 'lcb': {
+                rowData.rules.title = 'LKĐ hoặc LTT'
+                rowData.rules.label = formatCurrency(salary.value)
+                rowData.rules.value = salary.value
+                break
             }
 
-        case 'VD: 30% LCB':
-            return {
-                [columnData.key]: {
-                    label: formatCurrency(columnData.value.coefficient * (0.3 * salary)),
-                    value: columnData.value.coefficient * (0.3 * salary)
+            case 'lkpi': {
+                if (salaryConfigs.lkpi.percent) {
+                    rowData.rules.title = `${salaryConfigs.lkpi.percent}% LCB`
+                    rowData.rules.label = formatCurrency((salaryConfigs.lkpi.percent / 100) * salary.value)
+                    rowData.rules.value = (salaryConfigs.lkpi.percent / 100) * salary.value
+                } else {
+                    rowData.rules.label = formatCurrency(salaryConfigs.value)
+                    rowData.rules.value = salaryConfigs.value
+                }
+                break
+            }
+
+            case 'lvt': {
+                if (salaryConfigs.lkpi.percent) {
+                    rowData.rules.label = formatCurrency(
+                        salary.value + (salaryConfigs.lkpi.percent / 100) * salary.value
+                    )
+                    rowData.rules.value = salary.value + (salaryConfigs.lkpi.percent / 100) * salary.value
+                } else {
+                    rowData.rules.label = formatCurrency(salary.value + salaryConfigs.value)
+                    rowData.rules.value = salary.value + salaryConfigs.value
+                }
+                rowData.rules.title = 'Tổng của LCB và LKPI'
+                break
+            }
+        }
+
+        for (const key of Object.keys(salaryConfigs)) {
+            if (!defaultSalaryKeys.includes(key)) {
+                if (rowData.rules.key === key) {
+                    rowData.rules.title = salaryConfigs[key].title
+                    rowData.rules.label = formatCurrency(salaryConfigs[key].value)
+                    rowData.rules.value = salaryConfigs[key].value
                 }
             }
-    }
+        }
+
+        return rowData
+    })
 }
 
-const createRestRows = ({ salary, columnsData, rowsData }) => {
-    const createDataRow = ({ salary, columnsData, row, index }) => {
+const calcSalaryByLevel = ({ row, columnData }) => ({
+    [columnData.key]: {
+        label: formatCurrency(row.rules.value * columnData.value.coefficient),
+        value: row.rules.value * columnData.value.coefficient
+    }
+})
+
+const createRestRows = ({ salary, columnsData, rowsData, summaryTable, setSummaryTable }) => {
+    const createDataRow = ({ columnsData, row, index }) => {
         const { code, title, rules, amplitudeAndCoefficient } = row
         let restRow = {
             key: index + 1,
@@ -140,7 +176,7 @@ const createRestRows = ({ salary, columnsData, rowsData }) => {
         columnsData.forEach(columnData => {
             restRow = {
                 ...restRow,
-                ...calcSalaryByRule({ salary, row, columnData })
+                ...calcSalaryByLevel({ row, columnData })
             }
         })
 
@@ -153,15 +189,24 @@ const createRestRows = ({ salary, columnsData, rowsData }) => {
     })
 
     restRow.push({})
-    restRow.push(createSummaryRow({ columnsData, rows: restRow }))
+    restRow.push(createSummaryRow({ columnsData, rows: restRow, summaryTable, setSummaryTable }))
 
     return restRow
 }
 
-const createDataSource = ({ salary, columnsData, rowsData, titleTable }) => {
+const createDataSource = ({
+    salary,
+    columnsData,
+    rowsData,
+    titleTable,
+    amplitudeAndCoefficient,
+    setAmplitudeAndCoefficient,
+    summaryTable,
+    setSummaryTable
+}) => {
     const dataSource = [
-        createFirstRow({ salary, columnsData, titleTable }),
-        ...createRestRows({ salary, columnsData, rowsData })
+        createFirstRow({ salary, columnsData, titleTable, amplitudeAndCoefficient, setAmplitudeAndCoefficient }),
+        ...createRestRows({ salary, columnsData, rowsData, summaryTable, setSummaryTable })
     ]
 
     return dataSource
@@ -231,10 +276,10 @@ const isExistClickedColumn = titleTableList => {
 }
 
 const createColumns = ({
-    salary,
     columnsData,
     rowsData,
     setDataValue,
+    salary,
     setSalary,
     handleAddColumn,
     handleRemoveColumn,
@@ -253,6 +298,9 @@ const createColumns = ({
     rowTableEditing,
     setRowTableEditing,
     indexRowTableDelete,
+    setIndexRowTableDelete,
+    amplitudeAndCoefficient,
+    setAmplitudeAndCoefficient,
     handleDeleteSession
 }) => {
     const columns = [
@@ -409,7 +457,13 @@ const createColumns = ({
                                             >
                                                 Delete
                                             </Button>
-                                            <Button type='text'>Config</Button>
+                                            <Button
+                                                icon={<SettingOutlined />}
+                                                onClick={() => {
+                                                    setVisiable(false)
+                                                }}
+                                                type='text'
+                                            />
                                         </div>
                                     }
                                     trigger='click'
@@ -430,7 +484,7 @@ const createColumns = ({
                         <div className={styles.rowDelete}>
                             <CloseIcon
                                 className={clsx({
-                                    vVisiable: indexRowTableDelete === index
+                                    vVisiable: indexRowTableDelete === index && !rowTableEditing?.isClicked
                                 })}
                                 onClick={() => {
                                     handleDeleteRow(index)
@@ -463,7 +517,11 @@ const createColumns = ({
                                 onFocus={event => event.target.select()}
                                 value={text}
                                 onChange={event => {
-                                    setDataValue(`${index - 1}.title`, event.target.value)
+                                    if (index === rowsData.length + 2) {
+                                        setDataValue('setSummaryTable', event.target.value)
+                                    } else {
+                                        setDataValue(`${index - 1}.title`, event.target.value)
+                                    }
                                 }}
                             />
 
@@ -528,7 +586,7 @@ const createColumns = ({
                         </div>
                     )}
                     <div
-                        className={clsx(styles.titleTableList, {
+                        className={clsx(styles.titleTableList, styles.titleTableListCenter, {
                             dNone: titleTableList.rules.isClicked
                         })}
                     >
@@ -572,11 +630,11 @@ const createColumns = ({
                     </div>
                 </div>
             ) : (
-                <div className={styles.titleTableList}>{titleTableList.rules.title}</div>
+                <div className={(styles.titleTableList, styles.titleTableListCenter)}>{titleTableList.rules.title}</div>
             ),
             dataIndex: 'rules',
             align: 'center',
-            width: 120,
+            width: 160,
             fixed: 'left',
 
             onHeaderCell: () => ({
@@ -598,19 +656,13 @@ const createColumns = ({
 
             render: (text, record, index) => {
                 if (index === 0) {
-                    return (
-                        <StartingSalaryDropdown
-                            startingSalary={salary}
-                            options={[
-                                { id: 1, label: '4.500.000 đ', value: 4500000 },
-                                { id: 2, label: '6.500.000 đ', value: 6500000 }
-                            ]}
-                            onSalaryChange={newSalary => {
-                                setSalary(newSalary)
-                            }}
-                        />
-                    )
+                    return <SalaryDropdown salary={salary} setSalary={setSalary} />
                 }
+
+                if (text?.title) {
+                    return text.title
+                }
+
                 return text
             }
         },
@@ -618,8 +670,80 @@ const createColumns = ({
             title: '',
             dataIndex: 'amplitudeAndCoefficient',
             align: 'center',
+            fixed: 'left',
             width: 120,
-            fixed: 'left'
+
+            render: text => {
+                if (text) {
+                    return (
+                        <div className={styles.lightColor}>
+                            {!text.amplitude.isClicked && !text.coefficient.isClicked && (
+                                <div>
+                                    <div>
+                                        {text.amplitude.title}
+                                        <EditOutlined
+                                            className={clsx({
+                                                dNone: text.amplitude.isClicked
+                                            })}
+                                            style={{
+                                                marginLeft: 3
+                                            }}
+                                            onClick={() => {
+                                                setAmplitudeAndCoefficient(preState => {
+                                                    const newState = JSON.parse(JSON.stringify(preState))
+                                                    newState.amplitude.isClicked = true
+                                                    return newState
+                                                })
+                                            }}
+                                        />
+                                    </div>
+
+                                    <div>
+                                        {text.coefficient.title}
+                                        <EditOutlined
+                                            className={clsx({
+                                                dNone: text.coefficient.isClicked
+                                            })}
+                                            style={{
+                                                marginLeft: 3
+                                            }}
+                                            onClick={() => {
+                                                setAmplitudeAndCoefficient(preState => {
+                                                    const newState = JSON.parse(JSON.stringify(preState))
+                                                    newState.coefficient.isClicked = true
+                                                    return newState
+                                                })
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            <div
+                                className={clsx(styles.flexCenterVertical, {
+                                    dNone: !text.amplitude.isClicked && !text.coefficient.isClicked
+                                })}
+                            >
+                                <Input
+                                    autoFocus
+                                    onFocus={event => event.target.select()}
+                                    value={text.amplitude.isClicked ? text.amplitude.title : text.coefficient.title}
+                                    onChange={event => {
+                                        text.amplitude.isClicked
+                                            ? setDataValue('setAmplitude', event.target.value)
+                                            : setDataValue('setCoefficient', event.target.value)
+                                    }}
+                                />
+
+                                <div className={styles.actions}>
+                                    <CheckIcon onClick={handleRowTableSave} />
+                                    <CloseIcon onClick={handleRowTableCancel} />
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
+            }
         },
         ...createAmplitudeAndCoefficient({
             columnsData,
@@ -634,6 +758,20 @@ const createColumns = ({
 }
 
 const SalaryGrade03Table = ({ id, titleTable: _titleTable, ...restProps }) => {
+    const [salary, setSalary] = useState(_salary)
+    const [salaryConfigs, setSalaryConfigs] = useState({
+        lkpi: {
+            title: '30% LCB',
+            percent: 30,
+            value: 0
+        },
+        pc1: {
+            title: 'Tiền ăn trưa',
+            percent: 0,
+            value: 190000
+        }
+    })
+
     const [levelSalary, setLevelSalary] = useState({
         level: 7,
         amplitude: 0.25,
@@ -676,11 +814,32 @@ const SalaryGrade03Table = ({ id, titleTable: _titleTable, ...restProps }) => {
     const dispatch = useDispatch()
 
     const [columnsData, setColumnsData] = useState(getCloneCols(createColumnsMock(levelSalary)))
-    const [rowsData, setRowsData] = useState(getCloneCols(rowsMock))
+    const [rowsData, setRowsData] = useState(
+        getCloneCols(
+            mapRowsDataByConfig({
+                salary,
+                salaryConfigs,
+                rowsData: rowsMock
+            })
+        )
+    )
     const [titleTable, setTitleTable] = useState(_titleTable)
+    const [summaryTable, setSummaryTable] = useState('Tổng lương và phụ cấp')
+    const [amplitudeAndCoefficient, setAmplitudeAndCoefficient] = useState({
+        amplitude: {
+            title: 'Biên độ',
+            isClicked: false
+        },
+        coefficient: {
+            title: 'Hệ số',
+            isClicked: false
+        }
+    })
+    const amplitudeAndCoefficientRef = useRef(amplitudeAndCoefficient)
 
     const rowsDataRef = useRef(getCloneCols(rowsMock))
     const titleTableRef = useRef(_titleTable)
+    const summaryTableRef = useRef(summaryTable)
 
     const [visiableAddRow, setVisiableAddRow] = useState(false)
     const submitAddRowBtnRef = useRef(null)
@@ -737,25 +896,70 @@ const SalaryGrade03Table = ({ id, titleTable: _titleTable, ...restProps }) => {
     }
 
     const setDataValue = (path, value) => {
-        if (path === 'setTitleTable') {
-            setTitleTable(value)
-        } else {
-            const [index, dataIndex] = path.split('.')
-            const newData = [...rowsData]
-            newData[index][dataIndex] = value
-            setRowsData(newData)
+        switch (path) {
+            case 'setTitleTable': {
+                setTitleTable(value)
+                break
+            }
+
+            case 'setSummaryTable': {
+                setSummaryTable(value)
+                break
+            }
+
+            case 'setAmplitude': {
+                setAmplitudeAndCoefficient(preState => {
+                    const newState = JSON.parse(JSON.stringify(preState))
+                    newState.amplitude.title = value
+                    return newState
+                })
+                break
+            }
+
+            case 'setCoefficient': {
+                setAmplitudeAndCoefficient(preState => {
+                    const newState = JSON.parse(JSON.stringify(preState))
+                    newState.coefficient.title = value
+                    return newState
+                })
+                break
+            }
+
+            default: {
+                const [index, dataIndex] = path.split('.')
+                const newData = [...rowsData]
+                newData[index][dataIndex] = value
+                setRowsData(newData)
+                break
+            }
         }
     }
 
     const handleRowTableSave = () => {
         rowsDataRef.current = getCloneCols(rowsData)
         titleTableRef.current = titleTable
+        summaryTableRef.current = summaryTable
+
+        const newAmplitudeAndCoefficient = JSON.parse(JSON.stringify(amplitudeAndCoefficient))
+        newAmplitudeAndCoefficient.amplitude.isClicked = false
+        newAmplitudeAndCoefficient.coefficient.isClicked = false
+        amplitudeAndCoefficientRef.current = newAmplitudeAndCoefficient
+        setAmplitudeAndCoefficient(newAmplitudeAndCoefficient)
+
         setRowTableEditing(null)
     }
 
     const handleRowTableCancel = () => {
         setRowsData(getCloneCols(rowsDataRef.current))
         setTitleTable(titleTableRef.current)
+        setSummaryTable(summaryTableRef.current)
+
+        const newAmplitudeAndCoefficient = JSON.parse(JSON.stringify(amplitudeAndCoefficientRef.current))
+        newAmplitudeAndCoefficient.amplitude.isClicked = false
+        newAmplitudeAndCoefficient.coefficient.isClicked = false
+        amplitudeAndCoefficientRef.current = newAmplitudeAndCoefficient
+        setAmplitudeAndCoefficient(newAmplitudeAndCoefficient)
+
         setRowTableEditing(null)
     }
 
@@ -773,17 +977,25 @@ const SalaryGrade03Table = ({ id, titleTable: _titleTable, ...restProps }) => {
         })
     }
 
-    const [salary, setSalary] = useState(4_500_000)
-
     const [dataSource, setDataSource] = useState(
-        createDataSource({ salary, columnsData, rowsData, handleAddRow, titleTable })
+        createDataSource({
+            salary,
+            columnsData,
+            rowsData,
+            handleAddRow,
+            titleTable,
+            amplitudeAndCoefficient,
+            setAmplitudeAndCoefficient,
+            summaryTable,
+            setSummaryTable
+        })
     )
 
     const columns = createColumns({
-        salary,
         columnsData,
         rowsData,
         setDataValue,
+        salary,
         setSalary,
         handleAddColumn,
         handleRemoveColumn,
@@ -803,6 +1015,8 @@ const SalaryGrade03Table = ({ id, titleTable: _titleTable, ...restProps }) => {
         setRowTableEditing,
         indexRowTableDelete,
         setIndexRowTableDelete,
+        amplitudeAndCoefficient,
+        setAmplitudeAndCoefficient,
         handleDeleteSession
     })
 
@@ -811,8 +1025,37 @@ const SalaryGrade03Table = ({ id, titleTable: _titleTable, ...restProps }) => {
     }, [levelSalary])
 
     useLayoutEffect(() => {
-        setDataSource(createDataSource({ salary, columnsData, rowsData, titleTable }))
-    }, [salary, titleTable, rowsData, columnsData])
+        setDataSource(
+            createDataSource({
+                salary,
+                columnsData,
+                rowsData,
+                titleTable,
+                amplitudeAndCoefficient,
+                setAmplitudeAndCoefficient,
+                summaryTable,
+                setSummaryTable
+            })
+        )
+    }, [
+        salary,
+        titleTable,
+        rowsData,
+        columnsData,
+        amplitudeAndCoefficient,
+        setAmplitudeAndCoefficient,
+        summaryTable,
+        setSummaryTable
+    ])
+
+    useEffect(() => {
+        const scrollWrapperElements = document.querySelectorAll('.ant-table-body')
+        const tableWidthElements = document.querySelectorAll('.ant-table-body > table')
+
+        scrollWrapperElements.forEach((scrollWrapperElement, index) => {
+            scrollWrapperElement.scrollTo(tableWidthElements[index].offsetWidth + 64, 0)
+        })
+    }, [levelSalary])
 
     useLayoutEffect(() => {
         const colspanElements = document.querySelectorAll(
@@ -883,6 +1126,31 @@ const SalaryGrade03Table = ({ id, titleTable: _titleTable, ...restProps }) => {
                         <Button ref={submitAddRowBtnRef} htmlType='submit' />
                     </Form.Item>
                 </Form>
+            </Modal>
+
+            {/* <ModalConfiguration3
+                visible={visible}
+                setVisible={setVisible}
+                title={`Configuration ${obj.children}`}
+                onCancel={() => setVisible(false)}
+                recordInfo={record}
+                setData={setDataValue}
+                save={save}
+                cancel={cancel}
+                luongKhoiDiem={luongKhoiDiem}
+                setLuongKhoiDiem={setLuongKhoiDiem}
+                initialSalary={initialSalary}
+                setInitialSalary={setInitialSalary}
+            /> */}
+            <ModalConfiguration3 />
+
+            <Modal title='Thêm dữ liệu' visible okText='Thêm' cancelText='Huỷ'>
+                <NBL03
+                    salary={salary}
+                    setSalary={setSalary}
+                    salaryConfigs={salaryConfigs}
+                    setSalaryConfigs={setSalaryConfigs}
+                />
             </Modal>
         </>
     )

@@ -2,22 +2,22 @@
 import {
     CloseOutlined,
     DownOutlined,
+    MoreOutlined,
     SortAscendingOutlined,
     UpOutlined,
     PlusCircleOutlined,
-    ExclamationCircleOutlined,
-    SettingOutlined
+    ExclamationCircleOutlined
 } from '@ant-design/icons'
-import { Button, Input, Popconfirm, Select, Space } from 'antd'
+import { Button, Input, Popconfirm, Popover, Select, Space, Modal } from 'antd'
 import clsx from 'clsx'
 // import Modal from 'antd/lib/modal/Modal';
-import React, { useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import { calculateHeSo, formatCurrency, generateNewChild, getNgachLuongInfo, getNumChild } from 'utils/PayGradesHelper'
-import ModalConfiguration from 'components/modal-configuration/ModalConfiguration'
 
 const { Option } = Select
 
 export const useColumns = ({
+    deleteSection,
     addMode,
     updatePcColTitle,
     addNewPcCol,
@@ -32,38 +32,42 @@ export const useColumns = ({
     isEditing,
     expandedKeys,
     toggleExpandedKeys,
+    editingKey,
+    edit,
     save,
     cancel
 }) => {
-
-    const [visible, setVisible] = useState(false)
-    const [formRef, setFormRef] = useState(null)
-
-    const handleCreate = () => {
-        formRef.validateFields((err, values) => {
-            if (err) {
-                return
+    const confirm = record => {
+        Modal.confirm({
+            title: 'Confirm delete',
+            icon: <ExclamationCircleOutlined />,
+            content: 'Are you sure to delete this section?',
+            okText: 'Confirm',
+            cancelText: 'Cancel',
+            onOk: close => {
+                deleteSection(record)
+                close()
             }
-
-            console.log('Received values of form: ', values)
-            formRef.resetFields()
-            setVisible(false)
         })
     }
+    const [visibleKey, setVisibleKey] = useState(false)
+    const hide = () => {
+        setVisibleKey('')
+    }
 
-    const saveFormRef = useCallback(node => {
-        if (node !== null) {
-            setFormRef(node)
+    const handleVisibleChange = (visible, key) => {
+        if (!visibleKey) {
+            setVisibleKey(key)
+        } else if (!visible && visibleKey === key) {
+            setVisibleKey('')
         }
-    }, [])
-
+    }
     const renderNgachLuong = (text, record) => {
         const editable = isEditing(record)
         const [parentKey, childKey] = record.key.split('.')
         const obj = { children: text, props: {} }
         // parent row
         if (!childKey && !editable) {
-            console.log(obj)
             obj.children = (
                 <Space>
                     <Button
@@ -72,14 +76,37 @@ export const useColumns = ({
                         onClick={() => toggleExpandedKeys(record.key)}
                     />
                     <Button icon={<SortAscendingOutlined />} type='text' />
-                    <Button icon={<SettingOutlined />} onClick={() => setVisible(true)} type='text' />
-                    <ModalConfiguration
-                        ref={saveFormRef}
-                        visible={visible}
-                        title={`Configuration ${obj.children}`}
-                        onCancel={() => setVisible(false)}
-                        onCreate={() => handleCreate()}
-                    />
+                    <Popover
+                        visible={visibleKey === record.key}
+                        onVisibleChange={visible => handleVisibleChange(visible, record.key)}
+                        content={
+                            <div className='bnl1-popover'>
+                                <Button
+                                    type='text'
+                                    className='btn--danger'
+                                    onClick={() => {
+                                        confirm(record)
+                                        hide()
+                                    }}
+                                >
+                                    Delete
+                                </Button>
+                                <Button type='text'>Config</Button>
+                                <Button
+                                    onClick={() => {
+                                        edit(record)
+                                        hide()
+                                    }}
+                                    type='text'
+                                >
+                                    Edit
+                                </Button>
+                            </div>
+                        }
+                        trigger={editingKey === '' ? 'click' : ''}
+                    >
+                        <Button icon={<MoreOutlined />} type='text' disabled={editingKey !== ''} />
+                    </Popover>
                 </Space>
             )
         } else if (!childKey && editable) {
@@ -142,6 +169,7 @@ export const useColumns = ({
     }
 
     const renderIndex = (text, record) => {
+        const editable = isEditing(record)
         const isChild = record.key.includes('.')
 
         const [childKey] = record.key.split('.')
@@ -157,6 +185,7 @@ export const useColumns = ({
                     <Button
                         icon={<PlusCircleOutlined className='btn--primary' />}
                         type='text'
+                        disabled={!editable}
                         onClick={() => {
                             setDataValue(`${parentKey}.children.${currentLength}`, generateNewChild(siblings))
                             setDataValue(`${parentKey}.children.${currentLength + 1}`, {
@@ -177,13 +206,12 @@ export const useColumns = ({
             )
         } else {
             obj.children = (
-                <div className={clsx({ 'index-child-row ml': !!childKey })}>
-                    {isChild ? (
+                <div className={clsx({ 'index-child-row': !!childKey })}>
+                    {isChild && (
                         // (!isEditMode ||
                         // 	(isEditMode &&
                         // 		data[parentKey - 1].children.length > 8 &&
                         // 		parseInt(childKey) === data[parentKey - 1].children.length - 1)) && (
-                            <>
                         <Popconfirm
                             cancelButtonProps={{ className: 'pop-confirm__btn' }}
                             okButtonProps={{ className: 'pop-confirm__btn' }}
@@ -203,13 +231,15 @@ export const useColumns = ({
                                 }
                             }}
                         >
-                                <CloseOutlined className={clsx('delete-child-btn btn--danger icon--wh10px mr-5px', hoverKey === record.key ? 'visible' : 'hidden')}
-                                />
+                            <Button
+                                className={clsx('delete-child-btn', hoverKey === record.key ? 'visible' : 'hidden')}
+                                icon={<CloseOutlined className='btn--danger' />}
+                                size='small'
+                                type='text'
+                            />
                         </Popconfirm>
-                        <span>
-                    {record.key}</span>
-                    </>
-                    ): <span className='ml-15px'>{record.key}</span>}
+                    )}
+                    {record.key}
                 </div>
             )
         }

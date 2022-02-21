@@ -1,5 +1,5 @@
 import { Button, Select, Table } from 'antd'
-import { data as _initialData, filterData, pcCols as _pcCols } from 'pages/pay-grades/initialize-data/_mock01'
+import { data as _initialData, pcCols as _pcCols } from 'pages/pay-grades/initialize-data/_mock01'
 import 'pages/pay-grades/PayGrades.scss'
 import React, { useEffect, useRef, useState } from 'react'
 import { generateNewChild, generateNewNL } from 'utils/PayGradesHelper'
@@ -46,7 +46,6 @@ const PayGrades01 = () => {
     const [hoverKey, setHoverKey] = useState(null)
     const listCellNeedUpdate = useRef([])
     const [addMode, setAddMode] = useState(false)
-    const [filterSection, setFilterSection] = useState(filterData)
 
     const setDataValue = (path, value) => {
         const [parentKey, parentDataIdx, childKey, childDataIdx] = path.split('.')
@@ -70,10 +69,7 @@ const PayGrades01 = () => {
     const isEditing = record => !!(record.key === editingKey || record.key.startsWith(`${editingKey}.`))
     const isEditMode = !!editingKey
     const isHeSoAvgRow = record => {
-        // console.log(record)
         const [parentKey, childKey] = record.key.split('.')
-        // console.log(parentKey)
-        // console.log(data[parentKey - 1].heSo[0])
         return !!childKey && parseFloat(record.heSo) === parseFloat(data[parentKey - 1].heSo[0])
     }
     const edit = record => {
@@ -118,10 +114,6 @@ const PayGrades01 = () => {
         edit(newNL)
         setData(getCloneData([...data, newNL]))
         setAddMode(true)
-        setFilterSection([...filterSection, {
-            value: newNL.key,
-            label: newNL.ngachLuong
-        }])
     }
 
     const onClickAddChild = parentKey => {
@@ -227,7 +219,6 @@ const PayGrades01 = () => {
             })
         }
     }, [addMode])
-
     const getAddId = record => {
         if (record.key === `${data.length}`) {
             return 'addElStart'
@@ -238,14 +229,7 @@ const PayGrades01 = () => {
         return undefined
     }
 
-    const onChangeFilterNgachLuong = (val) => {
-        const filterData = []
-        filterData.push(data.find((_data) => _data.key == val ))
-        // filterData.push(data[1])
-        setData(filterData)
-    }
-
-    console.log(filterSection)
+    // console.log(data)
 
     return (
         <div className='bang-ngach-luong-1'>
@@ -258,13 +242,9 @@ const PayGrades01 = () => {
                     }}
                 />
                 <div className='table__header'>
-                    <Select
-                        placeholder="Chọn..."
-                        options={filterSection}
-                        onChange={val => {
-                            onChangeFilterNgachLuong(val)
-                        }}
-                    />
+                    <Select size='small' defaultValue={'1'}>
+                        <Option value='1'>Chọn...</Option>
+                    </Select>
                     <div className='table__header__text'>
                         <span>Giá trị lương khởi điểm</span>
                         <Select

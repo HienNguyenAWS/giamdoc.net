@@ -18,7 +18,6 @@ import rootSaga from 'sagas'
 import SocketService from 'services/socket/SocketService'
 import { URI } from 'constants/config'
 import { LoadScript } from '@react-google-maps/api'
-// import store from './store'
 
 const store = configureStore()
 store.runSaga(rootSaga)

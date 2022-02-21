@@ -1,6 +1,6 @@
 /* eslint-disable indent */
 import { fromJS } from 'immutable'
-import { ADD_PAYGRADE, DELETE_PAYGRADE } from './PayGrades03.action'
+import { ADD_LEVEL, ADD_PAYGRADE, DELETE_PAYGRADE } from './PayGrades03.action'
 import { v4 as uuidv4 } from 'uuid'
 
 const initialState = fromJS({

@@ -520,11 +520,6 @@
     margin-left: auto;
 }
 
-
-.ml-15px{
-    margin-left: 15px;
-}
-
 .ml-25px {
     margin-left: 25px;
 }
@@ -533,18 +528,8 @@
     margin-right: 5px;
 }
 
-.mr-15px{
-    margin-right: 15px;
-}
-
 .mb-5px {
     margin-bottom: 5px;
-}
-
-.mt{
-    &--15px{
-        margin-top: 15px;
-    }
 }
 
 .pr-0 {
@@ -559,21 +544,12 @@
     text-align: right;
 }
 
-.txt-top{
-    margin-top: 0px;
-    margin-bottom: auto;
+.txt-center {
+    text-align: center;
 }
 
-.txt-center{
-	text-align: center;
-}
-
-.height-full{
-    height: 100%;
-}
-
-.flex-column{
-	flex-direction: column;
+.flex-column {
+    flex-direction: column;
 }
 
 .flex-row {

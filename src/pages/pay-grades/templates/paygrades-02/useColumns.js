@@ -1,15 +1,16 @@
 /* eslint-disable no-unused-vars */
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import {
     CloseOutlined,
     DownOutlined,
-    SettingOutlined,
+    MoreOutlined,
+    SortAscendingOutlined,
     UpOutlined,
     PlusCircleOutlined,
     ExclamationCircleOutlined,
     CheckOutlined
 } from '@ant-design/icons'
-import { Button, Input, Popconfirm, Popover, Space, Modal, Select } from 'antd'
+import { Button, Input, Popconfirm, Popover, Space, Modal } from 'antd'
 import React from 'react'
 import {
     calculateHeSo,
@@ -21,8 +22,6 @@ import {
 import Pen from 'pages/pay-grades/components/Pen'
 import ArrowUp from 'pages/pay-grades/components/ArrowUp'
 import ArrowDown from 'pages/pay-grades/components/ArrowDown'
-import ModalConfiguration from 'components/modal-configuration/ModalConfiguration'
-
 export const useColumns = ({
     addMode,
     onClickDeleteChild,
@@ -44,29 +43,9 @@ export const useColumns = ({
     toUp,
     toDown,
     initialDataRef,
-    getCloneData,
-    coDinhHeSo,
-    setCoDinhHeSo,
-    applyForData,
-    setApplyForData,
-    editKpi,
-    setEditKpi,
-    hoverNL,
-    setHoverNL,
-    editNL,
-    setEditNL,
-    editApply,
-    setEditApply,
-    keyEdit,
-    setKeyEdit,
-    addModeNL,
-    setAddModeNL
+    getCloneData
 }) => {
-
-    const [visible, setVisible] = useState(false)
     const [dataCurrent, setDataCurrent] = useState(initialDataRef.current)
-    const [sectionData, setSectionData] = useState([])
-
     const confirm = (record) => {
         Modal.confirm({
             title: 'Confirm delete',
@@ -80,11 +59,6 @@ export const useColumns = ({
             }
         })
     }
-    useEffect(() => {
-        console.log(data.length)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [addModeNL])
-
     const [visibleKey, setVisibleKey] = useState(false)
     const hide = () => {
         setVisibleKey('')
@@ -96,76 +70,69 @@ export const useColumns = ({
             setVisibleKey('')
         }
     }
-    const { Option } = Select
-
-    const openModalConfiguration = (e) => {
-        const sectionKey = e.currentTarget.getAttribute('data-key')
-        const data = dataCurrent.find((_data) => _data.key == sectionKey )
-        setSectionData(data)
-        setVisible(true)
-    }
-
+    const [editNL, setEditNL] = useState(false)
+    const [editApply, setEditApply] = useState(false)
     const renderNgachLuong = (text, record) => {
         const editable = isEditing(record)
         const [parentKey, childKey] = record.key.split('.')
         const obj = { children: text, props: {} }
+
         // parent row
         if (!childKey) {
             obj.children = (
                 <Space>
-                    { (addModeNL && parentKey == data.length) ?
-                        <div className="d-flex flex-row">
-                            <CloseOutlined
-                                className='mr-15px'
-                                style={{ color: '#FF494E80' }}
-                                onClick={() => {
-                                    cancel()
-                                    setAddModeNL(false)
-                                }}
-                            ></CloseOutlined>
-                            <CheckOutlined
-
-                                style={{ color: '#97c27d' }}
-                                onClick={() => {
-                                    save()
-                                    setAddModeNL(false)
-                                }}
-                            ></CheckOutlined>
-                        </div>
-                        :
-                        <>
-                            <Button
-                                icon={expandedKeys.includes(record.key) ? <UpOutlined /> : <DownOutlined />}
-                                type="text"
-                                onClick={() => toggleExpandedKeys(record.key)}
-                                disabled={(addModeNL && parentKey == data.length)}
-                            />
-                            <span className="d-flex flex-row">
-                                <Button
-                                    icon={<ArrowUp></ArrowUp>}
-                                    onClick={() => toUp(record.key)}
-                                    type="text"
-                                    className={record.key == 1 ? 'btn--width90Percent btn--opacity03' : 'btn--width90Percent'}
-                                    disabled={record.key == 1}
-                                ></Button>
-                                <Button
-                                    icon={<ArrowDown></ArrowDown>}
-                                    onClick={() => toDown(record.key)}
-                                    type="text"
-                                    className={record.key == data.length ? 'btn--opacity03' : ''}
-                                    disabled={record.key == data.length}
-                                ></Button>
-                            </span>
-                        </>
-                    }
-                    <Button icon={<SettingOutlined />} data-key={parentKey} onClick={openModalConfiguration} type='text' />
-                    <ModalConfiguration
-                        visible={visible}
-                        title={`Configuration - ${sectionData.salaryGrade}`}
-                        onCancel={() => setVisible(false)}
-                        recordInfo={sectionData}
-                        setData={setDataValue}
+                    <Button
+                        icon={expandedKeys.includes(record.key) ? <UpOutlined /> : <DownOutlined />}
+                        type="text"
+                        onClick={() => toggleExpandedKeys(record.key)}
                     />
+                    <span className="d-flex flex-row">
+                        <Button
+                            icon={<ArrowUp></ArrowUp>}
+                            onClick={() => toUp(record.key)}
+                            type="text"
+                            className={record.key == 1 ? 'btn--width90Percent btn--opacity03' : 'btn--width90Percent'}
+                            disabled={record.key == 1}
+                        ></Button>
+                        <Button
+                            icon={<ArrowDown></ArrowDown>}
+                            onClick={() => toDown(record.key)}
+                            type="text"
+                            className={record.key == data.length ? 'btn--opacity03' : ''}
+                            disabled={record.key == data.length}
+                        ></Button>
+                    </span>
+                    <Popover
+                        visible={visibleKey === record.key}
+                        onVisibleChange={(visible) => handleVisibleChange(visible, record.key)}
+                        content={
+                            <div className="bnl1-popover">
+                                <Button
+                                    type="text"
+                                    className="btn--danger"
+                                    onClick={() => {
+                                        confirm(record)
+                                        hide()
+                                    }}
+                                >
+                                    Delete
+                                </Button>
+                                <Button type="text">Config</Button>
+                                <Button
+                                    onClick={() => {
+                                        edit(record)
+                                        hide()
+                                    }}
+                                    type="text"
+                                >
+                                    Edit
+                                </Button>
+                            </div>
+                        }
+                        trigger={editingKey === '' ? 'click' : ''}
+                    >
+                        <Button icon={<MoreOutlined />} type="text" disabled={editingKey !== ''} />
+                    </Popover>
                 </Space>
             )
         }
@@ -173,42 +140,38 @@ export const useColumns = ({
         // child row
         else if (childKey === '1') {
             obj.props.rowSpan = getNumChild(data, parentKey)
-
-            if (!editNL && !editApply && !addModeNL) {
+            if (!editNL && !editApply) {
                 const [name, applyFor] = getNgachLuongInfo(data, parentKey)
                 obj.children = (
-                    <div className='d-flex flex-column height-full mt--15px'>
-                        <div className="d-flex flex-row">
+                    <>
+                        {' '}
+                        <div
+                            className="d-flex flex-row"
+                        >
                             <div className="ngach-luong-title mr-5px">{name}</div>
-                            <Pen
-                                className="icon--wh12px mt--15px"
-                                onClick={() => {
-                                    setKeyEdit(record.key)
-                                    setEditNL(true)
-                                }}
-                            ></Pen>
+                            <Pen className='icon--wh12px' onClick={() => {
+                                setKeyEdit(record.key)
+                                setEditNL(true)
+                            }}></Pen>
                         </div>
                         <br />
-                        <div className="d-flex flex-row">
-                            <div className="mr-5px">
-                                Áp dụng cho: {applyFor.map((data) => applyForData[data-1].data + '; ')}
-                            </div>
-                            <Pen
-                                className="icon--wh12px mt--15px"
-                                onClick={() => {
-                                    setKeyEdit(record.key)
-                                    setEditApply(true)
-                                }}
-                            ></Pen>
+                        <div
+                            className="d-flex flex-row"
+                        >
+                            <div className='mr-5px'>Áp dụng cho: {applyFor}</div>
+                            <Pen className='icon--wh12px' onClick={() => {
+                                setKeyEdit(record.key)
+                                setEditApply(true)
+                            }}></Pen>
                         </div>
-                    </div>
+                    </>
                 )
             } else {
                 const [name, applyFor] = getNgachLuongInfo(data, parentKey)
                 obj.children = (
-                    <div className='d-flex flex-column height-full mt--15px'>
+                    <>
                         <div className="d-flex flex-row">
-                            {(editNL && keyEdit == record.key) || (addModeNL && parentKey == data.length) ? (
+                            {editNL && keyEdit == record.key ? (
                                 <>
                                     {' '}
                                     <Input.TextArea
@@ -219,7 +182,7 @@ export const useColumns = ({
                                             setDataValue(`${parentKey}.salaryGrade`, e.target.value)
                                         }}
                                     />
-                                    {!addModeNL && <div className="d-flex flex-column mr-0 ml-auto">
+                                    <div className="d-flex flex-column mr-0 ml-auto">
                                         <Button
                                             className="btn__editInstant border-0 btn--wh10px"
                                             icon={
@@ -249,7 +212,7 @@ export const useColumns = ({
                                             }}
                                             size="small"
                                         ></Button>
-                                    </div>}
+                                    </div>
                                 </>
                             ) : (
                                 <div className="ngach-luong-title">{name}</div>
@@ -258,25 +221,24 @@ export const useColumns = ({
                         <br />
                         Áp dụng cho:
                         <div className="d-flex flex-row">
-                            {(editApply && keyEdit == record.key) || (addModeNL && parentKey == data.length) ? (
+                            {editApply && keyEdit == record.key ? (
                                 <>
-                                    <Select mode="multiple" style={{ width: '100%' }} placeholder="Chọn"
-                                        onChange={ e => {
-                                            setDataValue(`${parentKey}.applyFor`, e)
-                                        }}>
-                                        {applyForData.map((data) => {
-                                            return <Option key={data.id} value={data.id}>{data.data}</Option>
-                                        })}
-                                    </Select>
-                                    {!addModeNL && <div className="d-flex flex-column mr-0 ml-auto">
+                                    <Input.TextArea
+                                        className="editInput"
+                                        autoSize={{ minRows: 2, maxRows: 6 }}
+                                        value={data[parentKey - 1].applyFor}
+                                        onChange={(e) => {
+                                            setDataValue(`${parentKey}.applyFor`, e.target.value)
+                                        }}
+                                    />
+                                    <div className="d-flex flex-column mr-0 ml-auto">
                                         <Button
                                             className="btn__editInstant border-0 btn--wh10px"
                                             icon={
                                                 <CloseOutlined
                                                     className="icon--wh10px"
                                                     style={{ color: '#FF494E80' }}
-                                                >
-                                                </CloseOutlined>
+                                                ></CloseOutlined>
                                             }
                                             onClick={() => {
                                                 cancel()
@@ -299,13 +261,13 @@ export const useColumns = ({
                                             }}
                                             size="small"
                                         ></Button>
-                                    </div>}
+                                    </div>
                                 </>
                             ) : (
-                                applyFor.map((data) => applyForData[data-1].data + '; ')
+                                <div>a</div>
                             )}
                         </div>
-                    </div>
+                    </>
                 )
             }
         } else {
@@ -314,9 +276,9 @@ export const useColumns = ({
 
         return obj
     }
+
     const [editHeSo, setEditHeSo] = useState(false)
     const [editStep, setEditStep] = useState(false)
-
     const renderHeSo = (text, record) => {
         const editable = isEditing(record)
         const [parentKey, childKey] = record.key.split('.')
@@ -324,137 +286,123 @@ export const useColumns = ({
             return {
                 children: null
             }
-        if (!childKey && !editHeSo && !editStep && !addModeNL) {
+        if (!childKey && !editHeSo && !editStep) {
             return (
                 <span className="he-so">
-                    <span className="he-so__avg">{record.coefficient[0]}</span>
-                    <Pen
-                        className="icon--wh12px"
-                        onClick={() => {
-                            setKeyEdit(record.key)
+                    <span className="he-so__avg">{record.coefficient[0]}</span><Pen className='icon--wh12px' onClick={() => {
+                        setKeyEdit(record.key)
 
-                            setEditHeSo(true)
-                        }}
-                    ></Pen>
-                    |<span className="he-so__jump">{record.coefficient[1]}</span>
-                    <Pen
-                        className="icon--wh12px"
-                        onClick={() => {
-                            setKeyEdit(record.key)
+                        setEditHeSo(true)
+                    }}></Pen>|
+                    <span className="he-so__jump">{record.coefficient[1]}</span><Pen className='icon--wh12px' onClick={() => {
+                        setKeyEdit(record.key)
 
-                            setEditStep(true)
-                        }}
-                    ></Pen>
+                        setEditStep(true)
+                    }}></Pen>
                 </span>
             )
         }
-        if (!childKey && (editHeSo || editStep || addModeNL)) {
+        if (!childKey && (editHeSo || editStep)) {
             return (
                 <div className="child--flex-row jus-content--center align-items--center">
                     <span className="he-so">
-                        {(editHeSo && record.key == keyEdit) || (addModeNL && parentKey == data.length) ? (
-                            <div className="d-flex flex-row">
-                                <Input
-                                    type="number"
-                                    step="0.1"
-                                    value={data[parentKey - 1].coefficient[0]}
-                                    className="editInput__he-so input--hideArrow"
-                                    onChange={(e) => {
-                                        setDataValue(`${parentKey}.coefficient`, [
-                                            e.target.value,
-                                            data[parentKey - 1].coefficient[1]
-                                        ])
-                                        setDataValue(`${parentKey}.coefficientAvg`, e.target.value)
+                        {editHeSo && record.key == keyEdit ? <div className='d-flex flex-row'>
+                            <Input
+                                type="number"
+                                step="0.1"
+                                value={data[parentKey - 1].coefficient[0]}
+                                className="editInput__he-so input--hideArrow"
+                                onChange={(e) => {
+                                    setDataValue(`${parentKey}.coefficient`, [
+                                        e.target.value,
+                                        data[parentKey - 1].coefficient[1]
+                                    ])
+                                    setDataValue(`${parentKey}.coefficientAvg`, e.target.value)
+                                }}
+                            />
+                            <div className="d-flex flex-column mr-0 ml-auto">
+                                <Button
+                                    className="btn__editInstant border-0 btn--wh10px"
+                                    icon={
+                                        <CloseOutlined
+                                            className="icon--wh10px"
+                                            style={{ color: '#FF494E80' }}
+                                        ></CloseOutlined>
+                                    }
+                                    onClick={() => {
+                                        cancel()
+                                        setEditHeSo(false)
                                     }}
-                                />
-                                {!addModeNL && <div className="d-flex flex-column mr-0 ml-auto">
-                                    <Button
-                                        className="btn__editInstant border-0 btn--wh10px"
-                                        icon={
-                                            <CloseOutlined
-                                                className="icon--wh10px"
-                                                style={{ color: '#FF494E80' }}
-                                            ></CloseOutlined>
-                                        }
-                                        onClick={() => {
-                                            cancel()
-                                            setEditHeSo(false)
-                                        }}
-                                        size="small"
-                                    ></Button>
+                                    size="small"
+                                ></Button>
 
-                                    <Button
-                                        className="btn__editInstant border-0 btn--wh10px"
-                                        icon={
-                                            <CheckOutlined
-                                                className="icon--wh10px"
-                                                style={{ color: '#97c27d' }}
-                                            ></CheckOutlined>
-                                        }
-                                        onClick={() => {
-                                            save()
-                                            setEditHeSo(false)
-                                        }}
-                                        size="small"
-                                    ></Button>
-                                </div>}
+                                <Button
+                                    className="btn__editInstant border-0 btn--wh10px"
+                                    icon={
+                                        <CheckOutlined
+                                            className="icon--wh10px"
+                                            style={{ color: '#97c27d' }}
+                                        ></CheckOutlined>
+                                    }
+                                    onClick={() => {
+                                        save()
+                                        setEditHeSo(false)
+                                    }}
+                                    size="small"
+                                ></Button>
                             </div>
-                        ) : (
-                            <span className="he-so__avg">{record.coefficient[0]}|</span>
-                        )}
+                        </div>:
+                            <span className="he-so__avg">{record.coefficient[0]}|</span>}
                     </span>
 
                     <span className="he-so">
-                        {(editStep && record.key == keyEdit) || (addModeNL && parentKey == data.length) ? (
-                            <div className="d-flex flex-row">
-                                <Input
-                                    type="number"
-                                    step="0.1"
-                                    value={data[parentKey - 1].coefficient[1]}
-                                    className="editInput__he-so input--hideArrow"
-                                    onChange={(e) => {
-                                        setDataValue(`${parentKey}.coefficient`, [
-                                            data[parentKey - 1].coefficient[0],
-                                            e.target.value
-                                        ])
-                                        // setDataValue(`${parentKey}.coefficientAvg`, e);
+                        {editStep && record.key == keyEdit ? <div className='d-flex flex-row'>
+                            <Input
+                                type="number"
+                                step="0.1"
+                                value={data[parentKey - 1].coefficient[1]}
+                                className="editInput__he-so input--hideArrow"
+                                onChange={(e) => {
+                                    setDataValue(`${parentKey}.coefficient`, [
+                                        data[parentKey - 1].coefficient[0],
+                                        e.target.value
+                                    ])
+                                // setDataValue(`${parentKey}.coefficientAvg`, e);
+                                }}
+                            />
+                            <div className="d-flex flex-column mr-0 ml-auto">
+                                <Button
+                                    className="btn__editInstant border-0 btn--wh10px"
+                                    icon={
+                                        <CloseOutlined
+                                            className="icon--wh10px"
+                                            style={{ color: '#FF494E80' }}
+                                        ></CloseOutlined>
+                                    }
+                                    onClick={() => {
+                                        cancel()
+                                        setEditStep(false)
                                     }}
-                                />
-                                {!addModeNL && <div className="d-flex flex-column mr-0 ml-auto">
-                                    <Button
-                                        className="btn__editInstant border-0 btn--wh10px"
-                                        icon={
-                                            <CloseOutlined
-                                                className="icon--wh10px"
-                                                style={{ color: '#FF494E80' }}
-                                            ></CloseOutlined>
-                                        }
-                                        onClick={() => {
-                                            cancel()
-                                            setEditStep(false)
-                                        }}
-                                        size="small"
-                                    ></Button>
+                                    size="small"
+                                ></Button>
 
-                                    <Button
-                                        className="btn__editInstant border-0 btn--wh10px"
-                                        icon={
-                                            <CheckOutlined
-                                                className="icon--wh10px"
-                                                style={{ color: '#97c27d' }}
-                                            ></CheckOutlined>
-                                        }
-                                        onClick={() => {
-                                            save()
-                                            setEditStep(false)
-                                        }}
-                                        size="small"
-                                    ></Button>
-                                </div>}
+                                <Button
+                                    className="btn__editInstant border-0 btn--wh10px"
+                                    icon={
+                                        <CheckOutlined
+                                            className="icon--wh10px"
+                                            style={{ color: '#97c27d' }}
+                                        ></CheckOutlined>
+                                    }
+                                    onClick={() => {
+                                        save()
+                                        setEditStep(false)
+                                    }}
+                                    size="small"
+                                ></Button>
                             </div>
-                        ) : (
-                            <span className="he-so__jump">{record.coefficient[1]}</span>
-                        )}
+                        </div>:
+                            <span className="he-so__jump">{record.coefficient[1]}</span>}
                     </span>
                 </div>
             )
@@ -464,16 +412,10 @@ export const useColumns = ({
             // if (editable) {
             const avg = data[parentKey - 1].coefficientAvg
             const jump = data[parentKey - 1].coefficient[1]
-            if (!coDinhHeSo) {
-                cellValue = calculateHeSo(avg, jump, parseInt(childKey) - 1, getNumChild(data, parentKey) - 1).toFixed(
-                    1
-                )
-                const currentCellValue = data[parentKey - 1].children[childKey - 1].coefficient
-                if (currentCellValue && cellValue.toString() !== currentCellValue.toString()) {
-                    listCellNeedUpdate.current.push([`${parentKey}.children.${childKey}.coefficient`, cellValue])
-                }
-            } else {
-                cellValue
+            cellValue = calculateHeSo(avg, jump, parseInt(childKey) - 1, getNumChild(data, parentKey) - 1).toFixed(1)
+            const currentCellValue = data[parentKey - 1].children[childKey - 1].coefficient
+            if (currentCellValue && cellValue.toString() !== currentCellValue.toString()) {
+                listCellNeedUpdate.current.push([`${parentKey}.children.${childKey}.coefficient`, cellValue])
             }
             // }
 
@@ -486,23 +428,17 @@ export const useColumns = ({
         const [parentKey, childKey] = record.key.split('.')
         const obj = { children: record.salaryScale, props: {} }
         const editable = isEditing(record)
-        if (!childKey && !editBL && !addModeNL) {
-            return (
-                <>
-                    <span className="mr-5px">{text}</span>
-                    <Pen
-                        className="icon--wh12px"
-                        onClick={() => {
-                            setKeyEdit(record.key)
-                            setEditBL(true)
-                        }}
-                    ></Pen>
-                </>
-            )
+        if (!childKey && !editBL) {
+            return <>
+                <span className='mr-5px'>{text}</span><Pen className='icon--wh12px' onClick={() => {
+                    setKeyEdit(record.key)
+                    setEditBL(true)
+                }}></Pen>
+            </>
         }
-        if (!childKey && (editBL || (addModeNL && parentKey == data.length))) {
+        if (!childKey && editBL) {
             return (
-                <div className="d-flex flex-row jus-content--center">
+                <div className='d-flex flex-row jus-content--center'>
                     <Input
                         className="editInputBL"
                         maxLength={9}
@@ -511,11 +447,14 @@ export const useColumns = ({
                             setDataValue(`${parentKey}.salaryScale`, e.target.value)
                         }}
                     />
-                    {!addModeNL && <div className="d-flex flex-column">
+                    <div className="d-flex flex-column">
                         <Button
                             className="btn__editInstant border-0 btn--wh10px"
                             icon={
-                                <CloseOutlined className="icon--wh10px" style={{ color: '#FF494E80' }}></CloseOutlined>
+                                <CloseOutlined
+                                    className="icon--wh10px"
+                                    style={{ color: '#FF494E80' }}
+                                ></CloseOutlined>
                             }
                             onClick={() => {
                                 cancel()
@@ -526,14 +465,19 @@ export const useColumns = ({
 
                         <Button
                             className="btn__editInstant border-0 btn--wh10px"
-                            icon={<CheckOutlined className="icon--wh10px" style={{ color: '#97c27d' }}></CheckOutlined>}
+                            icon={
+                                <CheckOutlined
+                                    className="icon--wh10px"
+                                    style={{ color: '#97c27d' }}
+                                ></CheckOutlined>
+                            }
                             onClick={() => {
                                 save()
                                 setEditBL(false)
                             }}
                             size="small"
                         ></Button>
-                    </div>}
+                    </div>
                 </div>
             )
         }
@@ -548,7 +492,7 @@ export const useColumns = ({
             }
             return (
                 <div className="d-flex flex-row pr-15px">
-                    {<div className="" style={hoverKey === record.key ? { opacity: !hoverNL ? 1 : 0 } : { opacity: 0 }}>
+                    <div className="" style={hoverKey === record.key ? { opacity: 1 } : { opacity: 0 }}>
                         <Popconfirm
                             cancelButtonProps={{ className: 'pop-confirm__btn' }}
                             okButtonProps={{ className: 'pop-confirm__btn' }}
@@ -571,7 +515,7 @@ export const useColumns = ({
                         >
                             <CloseOutlined style={{ color: 'rgba(255, 73, 78, 0.5)', marginRight: 10 }} />
                         </Popconfirm>
-                    </div>}
+                    </div>
                     <div className="mr-auto ml-auto">{`${data[parentKey - 1].salaryScale} - B${childKey}`}</div>
                 </div>
             )
@@ -807,25 +751,24 @@ export const useColumns = ({
     }
 
     const [hoverKpi, setHoverKpi] = useState(false)
+    const [editKpi, setEditKpi] = useState(false)
+    const [keyEdit, setKeyEdit] = useState(0)
     const renderKpiPercent = (text, record) => {
         if (record.salaryScale === 'add') return null
         const editable = isEditing(record)
         const [parentKey, childKey] = record.key.split('.')
         if (!childKey) {
-            return <span className="ml-25px">{text}</span>
+            return <span className='ml-25px'>{text}</span>
         }
         if (childKey && !editKpi) {
             return (
                 <div className="txt-right">
-                    <span className="mr-5px">{text}</span>
-                    <Pen
-                        className="icon--wh12px m-0"
-                        onClick={() => {
-                            setKeyEdit(record.key)
-                            setEditKpi(true)
-                        }}
-                        style={hoverKey == record.key && hoverKpi ? { opacity: '1' } : { opacity: '0' }}
-                    ></Pen>
+                    <span className='mr-5px'>{text}</span>
+                    <Pen className='icon--wh12px m-0' onClick={() => {
+                        setKeyEdit(record.key)
+                        setEditKpi(true)
+                    }}
+                    style={hoverKey == record.key && hoverKpi ? { opacity: '1' } : { opacity: '0' }} ></Pen>
                 </div>
             )
         }
@@ -898,20 +841,17 @@ export const useColumns = ({
         const editable = isEditing(record)
         const [parentKey, childKey] = record.key.split('.')
         if (!childKey) {
-            return <span className="">{text}</span>
+            return <span className='ml-25px'>{text}</span>
         }
         if (childKey && !editPC1) {
             return (
                 <div className="txt-right">
-                    <span className="mr-5px">{text}</span>
-                    <Pen
-                        className="icon--wh12px m-0"
-                        onClick={() => {
-                            setKeyEdit(record.key)
-                            setEditPC1(true)
-                        }}
-                        style={hoverKey == record.key && hoverPC1 ? { opacity: '1' } : { opacity: '0' }}
-                    ></Pen>
+                    <span className='mr-5px'>{text}</span>
+                    <Pen className='icon--wh12px m-0' onClick={() => {
+                        setKeyEdit(record.key)
+                        setEditPC1(true)
+                    }}
+                    style={hoverKey == record.key && hoverPC1 ? { opacity: '1' } : { opacity: '0' }} ></Pen>
                 </div>
             )
         }
@@ -984,20 +924,17 @@ export const useColumns = ({
         const editable = isEditing(record)
         const [parentKey, childKey] = record.key.split('.')
         if (!childKey) {
-            return <span className="">{text}</span>
+            return <span className='ml-25px'>{text}</span>
         }
         if (childKey && !editPC2) {
             return (
                 <div className="txt-right">
-                    <span className="mr-5px">{text}</span>
-                    <Pen
-                        className="icon--wh12px m-0"
-                        onClick={() => {
-                            setKeyEdit(record.key)
-                            setEditPC2(true)
-                        }}
-                        style={hoverKey == record.key && hoverPC2 ? { opacity: '1' } : { opacity: '0' }}
-                    ></Pen>
+                    <span className='mr-5px'>{text}</span>
+                    <Pen className='icon--wh12px m-0' onClick={() => {
+                        setKeyEdit(record.key)
+                        setEditPC2(true)
+                    }}
+                    style={hoverKey == record.key && hoverPC2 ? { opacity: '1' } : { opacity: '0' }} ></Pen>
                 </div>
             )
         }
@@ -1158,16 +1095,7 @@ export const useColumns = ({
             onHeaderCell: () => ({
                 fixed: 'left'
             }),
-            fixed: 'left',
-            onCell: () => ({
-                className: 'text--top',
-                onMouseEnter: () => {
-                    setHoverNL(true)
-                },
-                onMouseLeave: () => {
-                    setHoverNL(false)
-                }
-            })
+            fixed: 'left'
         },
         {
             title: 'Bậc lương',

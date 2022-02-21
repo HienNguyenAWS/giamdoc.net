@@ -1,11 +1,10 @@
-/* eslint-disable */
 import React, { useState } from 'react'
 
 const withActiveIcon = WrappedIcon => ({ activeIcon: ActiveIcon, ...restProps }) => {
-    const [hovered, setHoverd] = useState(false)
+    const [hovered, setHovered] = useState(false)
 
     const handleHoverChange = newState => {
-        setHoverd(newState)
+        setHovered(newState)
     }
 
     return hovered ? (

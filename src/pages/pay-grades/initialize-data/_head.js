@@ -49,7 +49,7 @@ export const HeadData = {
             label: 'Khoán sản phẩm',
             icon: 'ProductIcon',
             activeIcon: 'ProductActiveIcon'
-        },
+        },  
         {
             id: uuidv4(),
             href: 'dummy',

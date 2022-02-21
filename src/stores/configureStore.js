@@ -4,7 +4,6 @@
 
 import { createStore, applyMiddleware, compose } from 'redux'
 import { fromJS } from 'immutable'
-import thunk from 'redux-thunk'
 import createSagaMiddleware from 'redux-saga'
 import createReducer from './reducers'
 
@@ -13,7 +12,7 @@ const sagaMiddleware = createSagaMiddleware()
 export default function configureStore(initialState = {}) {
     // Create the store with two middlewares
     // 1. sagaMiddleware: Makes redux-sagas work
-    const middlewares = [sagaMiddleware, thunk]
+    const middlewares = [sagaMiddleware]
 
     const enhancers = [applyMiddleware(...middlewares)]
 
@@ -40,6 +39,18 @@ export default function configureStore(initialState = {}) {
     store.runSaga = sagaMiddleware.run
     store.injectedReducers = {} // Reducer registry
     store.injectedSagas = {} // Saga registry
+
+    // Make reducers hot reloadable, see http://mxs.is/googmo
+    /* istanbul ignore next */
+    // if (module.hot) {
+    //     // Enable Webpack hot module replacement for reducers
+    //     module.hot.accept('./reducers', () => {
+    //         // eslint-disable-next-line
+    //         const nextRootReducer = require("./reducers");
+    //         store.replaceReducer(nextRootReducer);
+    //         // store.replaceReducer(createReducer(store.injectedReducers))
+    //     });
+    // }
 
     return store
 }

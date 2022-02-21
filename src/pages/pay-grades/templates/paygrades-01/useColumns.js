@@ -31,7 +31,6 @@ export const useColumns = ({
     setDataValue,
     luongKhoiDiem,
     data,
-    isEditing,
     expandedKeys,
     toggleExpandedKeys,
     save,
@@ -336,57 +335,155 @@ export const useColumns = ({
         return obj
     }
 
+    const [editHeSo, setEditHeSo] = useState(false)
+    const [editStep, setEditStep] = useState(false)
     const renderHeSo = (text, record) => {
-        const editable = isEditing(record)
         const [parentKey, childKey] = record.key.split('.')
         if (record.index === 'add')
             return {
                 children: null
             }
-        if (!childKey && !editable) {
+        if (!childKey && !editHeSo && !editStep) {
             return (
                 <span className="he-so">
-                    <span className="he-so__avg">{text[0]}</span>|<span className="he-so__jump">{text[1]}</span>
+                    <span className="he-so__avg">{record.heSo[0]}</span>
+                    <Pen
+                        className="icon--wh12px"
+                        onClick={() => {
+                            setKeyEdit(record.key)
+
+                            setEditHeSo(true)
+                        }}
+                    ></Pen>
+                    |<span className="he-so__jump">{record.heSo[1]}</span>
+                    <Pen
+                        className="icon--wh12px"
+                        onClick={() => {
+                            setKeyEdit(record.key)
+
+                            setEditStep(true)
+                        }}
+                    ></Pen>
                 </span>
             )
         }
-        if (!childKey && editable) {
+
+        if (!childKey && (editHeSo || editStep)) {
             return (
-                <>
-                    <span>
-                        <Input
-                            value={data[parentKey - 1].heSo[0]}
-                            className="editInput__he-so"
-                            onChange={(e) => {
-                                setDataValue(`${parentKey}.heSo`, [e.target.value, data[parentKey - 1].heSo[1]])
-                                // setDataValue(`${parentKey}.heSoTB`, val);
-                            }}
-                        />
+                <div className="d-flex flex-row jus-content--center align-items--center">
+                    <span className="he-so">
+                        {(editHeSo && record.key == keyEdit) ? (
+                            <div className="d-flex flex-row">
+                                <Input
+                                    type="number"
+                                    step="0.1"
+                                    value={data[parentKey - 1].heSo[0]}
+                                    className="editInput__he-so input--hideArrow"
+                                    onChange={(e) => {
+                                        setDataValue(`${parentKey}.heSo`, [
+                                            e.target.value,
+                                            data[parentKey - 1].heSo[1]
+                                        ])
+                                        setDataValue(`${parentKey}.heSoTB`, e.target.value)
+                                    }}
+                                />
+                                <div className="d-flex flex-column mr-0 ml-auto">
+                                    <Button
+                                        className="btn__editInstant border-0 btn--wh10px"
+                                        icon={
+                                            <CloseOutlined
+                                                className="icon--wh10px"
+                                                style={{ color: '#FF494E80' }}
+                                            ></CloseOutlined>
+                                        }
+                                        onClick={() => {
+                                            cancel()
+                                            setEditHeSo(false)
+                                        }}
+                                        size="small"
+                                    ></Button>
+
+                                    <Button
+                                        className="btn__editInstant border-0 btn--wh10px"
+                                        icon={
+                                            <CheckOutlined
+                                                className="icon--wh10px"
+                                                style={{ color: '#97c27d' }}
+                                            ></CheckOutlined>
+                                        }
+                                        onClick={() => {
+                                            save()
+                                            setEditHeSo(false)
+                                        }}
+                                        size="small"
+                                    ></Button>
+                                </div>
+                            </div>
+                        ) : (
+                            <span className="he-so__avg">{record.heSo[0]}|</span>
+                        )}
                     </span>
-                    <span>
-                        <Input
-                            value={data[parentKey - 1].heSo[1]}
-                            className="editInput__he-so"
-                            onChange={(e) => {
-                                setDataValue(`${parentKey}.heSo`, [data[parentKey - 1].heSo[0], e.target.value])
-                            }}
-                        />
+
+                    <span className="he-so">
+                        {(editStep && record.key == keyEdit) ? (
+                            <div className="d-flex flex-row">
+                                <Input
+                                    type="number"
+                                    step="0.1"
+                                    value={data[parentKey - 1].heSo[1]}
+                                    className="editInput__he-so input--hideArrow"
+                                    onChange={(e) => {
+                                        setDataValue(`${parentKey}.heSo`, [
+                                            data[parentKey - 1].heSo[0],
+                                            e.target.value
+                                        ])
+                                    }}
+                                />
+                                <div className="d-flex flex-column mr-0 ml-auto">
+                                    <Button
+                                        className="btn__editInstant border-0 btn--wh10px"
+                                        icon={
+                                            <CloseOutlined
+                                                className="icon--wh10px"
+                                                style={{ color: '#FF494E80' }}
+                                            ></CloseOutlined>
+                                        }
+                                        onClick={() => {
+                                            cancel()
+                                            setEditStep(false)
+                                        }}
+                                        size="small"
+                                    ></Button>
+
+                                    <Button
+                                        className="btn__editInstant border-0 btn--wh10px"
+                                        icon={
+                                            <CheckOutlined
+                                                className="icon--wh10px"
+                                                style={{ color: '#97c27d' }}
+                                            ></CheckOutlined>
+                                        }
+                                        onClick={() => {
+                                            save()
+                                            setEditStep(false)
+                                        }}
+                                        size="small"
+                                    ></Button>
+                                </div>
+                            </div>
+                        ) : (
+                            <span className="he-so__jump">{record.heSo[1]}</span>
+                        )}
                     </span>
-                </>
+                </div>
             )
         }
+
         if (childKey) {
             let cellValue = text
             // if (editable) {
             const avg = parseFloat(data[parentKey - 1].heSo[0])
             const jump = parseFloat(data[parentKey - 1].heSo[1])
-            {console.log(typeof(calculateHeSo(
-                avg,
-                jump,
-                parseInt(childKey) - 1,
-                getNumChild(data, parentKey) - 1,
-                data[parentKey - 1].loaiHeSo
-            )))}
             // eslint-disable-next-line no-debugger
             cellValue = calculateHeSo(
                 avg,
@@ -780,7 +877,9 @@ export const useColumns = ({
         if (childKey && !editPC) {
             return (
                 <div className="ml-17px">
-                    <span className="mr-5px">{text}</span>
+                    <span className="mr-5px">{text == null ? 
+                    data[parentKey -1].phuCapDefault
+                    : text}</span>
                     <Pen
                         className="icon--wh12px m-0"
                         onClick={() => {
@@ -833,7 +932,7 @@ export const useColumns = ({
         if (childKey && editPC) {
             return (
                 <div className="d-flex flex-row jus-content--center">
-                    <span className="ml-15px">{text}</span>
+                    <span className="ml-15px">{text == null ? data[parentKey - 1].phuCapDefault : text}</span>
                     <div className="d-flex flex-column mr-0 ml-auto visible--hidden m-0">
                         <Button
                             className="btn__editInstant border-0 btn--wh10px"
@@ -865,8 +964,9 @@ export const useColumns = ({
         // }
         // if (childKey && editable) {
         if (childKey) {
+            const percent = data[parentKey - 1].children[childKey - 1][`phuCapUnit${pcPos}`] == null ? data[parentKey - 1].phuCapDefault : data[parentKey - 1].children[childKey - 1][`phuCapUnit${pcPos}`]
             const lcb = parseFloat(data[parentKey - 1].children[childKey - 1].lcb)
-            const phuCapUnit = parseFloat(data[parentKey - 1].children[childKey - 1][`phuCapUnit${pcPos}`]) || 0
+            const phuCapUnit = parseFloat(percent) || 0
             const parentPhuCapUnit = data[parentKey - 1][`phuCapUnit${pcPos}`]
             let newVal
             if (parentPhuCapUnit === '%') {

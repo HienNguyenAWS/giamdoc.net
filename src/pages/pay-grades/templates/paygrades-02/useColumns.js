@@ -60,7 +60,11 @@ export const useColumns = ({
     keyEdit,
     setKeyEdit,
     addModeNL,
-    setAddModeNL
+    setAddModeNL,
+    initialSalary,
+    setInitialSalary,
+    setLuongKhoiDiem
+
 }) => {
 
     const [visible, setVisible] = useState(false)
@@ -159,6 +163,10 @@ export const useColumns = ({
                         setData={setDataValue}
                         save={save}
                         cancel={cancel}
+                        luongKhoiDiem={luongKhoiDiem}
+                        setLuongKhoiDiem={setLuongKhoiDiem}
+                        initialSalary={initialSalary}
+                        setInitialSalary={setInitialSalary}
                     />
                 </Space>
             )

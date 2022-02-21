@@ -40,7 +40,9 @@ export const useColumns = ({
     applyForData,
     initialSalary,
     setInitialSalary,
-    setLuongKhoiDiem
+    setLuongKhoiDiem,
+    addMode,
+    setAddMode
 }) => {
     const [visible, setVisible] = useState(false)
 
@@ -59,35 +61,53 @@ export const useColumns = ({
         if (!childKey) {
             obj.children = (
                 <Space>
-                    <Button
-                        icon={expandedKeys.includes(record.key) ? <UpOutlined /> : <DownOutlined />}
-                        type="text"
-                        onClick={() => toggleExpandedKeys(record.key)}
-                    />
-                    <span className="d-flex flex-row">
-                        <Button
-                            icon={<ArrowUp></ArrowUp>}
-                            onClick={() => toUp(record.key)}
-                            type="text"
-                            className={record.key == 1 ? 'btn--width90Percent btn--opacity03' : 'btn--width90Percent'}
-                            disabled={record.key == 1}
-                        ></Button>
-                        <Button
-                            icon={<ArrowDown></ArrowDown>}
-                            onClick={() => toDown(record.key)}
-                            type="text"
-                            className={record.key == data.length ? 'btn--opacity03' : ''}
-                            disabled={record.key == data.length}
-                        ></Button>
-                    </span>
-                    <Button icon={<SettingOutlined />}
-                        onClick={() => {
-                            setVisible(true)
-                            setConfigKey(parentKey)
-                        }}
-                        type="text" />
-                        {record.key == configKey &&
-                        <ModalConfiguration1
+                    { (addMode && parentKey == data.length) ?
+                        <div className="d-flex flex-row">
+                            <CloseOutlined
+                                className='mr-15px'
+                                style={{ color: '#FF494E80' }}
+                                onClick={() => {
+                                    cancel()
+                                    setAddMode(false)
+                                }}
+                            ></CloseOutlined>
+                            <CheckOutlined
+
+                                style={{ color: '#97c27d' }}
+                                onClick={() => {
+                                    save()
+                                    setAddMode(false)
+                                }}
+                            ></CheckOutlined>
+                        </div>
+                        :
+                        <>
+                            <Button
+                                icon={expandedKeys.includes(record.key) ? <UpOutlined /> : <DownOutlined />}
+                                type="text"
+                                onClick={() => toggleExpandedKeys(record.key)}
+                                disabled={(addMode && parentKey == data.length)}
+                            />
+                            <span className="d-flex flex-row">
+                                <Button
+                                    icon={<ArrowUp></ArrowUp>}
+                                    onClick={() => toUp(record.key)}
+                                    type="text"
+                                    className={record.key == 1 ? 'btn--width90Percent btn--opacity03' : 'btn--width90Percent'}
+                                    disabled={record.key == 1}
+                                ></Button>
+                                <Button
+                                    icon={<ArrowDown></ArrowDown>}
+                                    onClick={() => toDown(record.key)}
+                                    type="text"
+                                    className={record.key == data.length ? 'btn--opacity03' : ''}
+                                    disabled={record.key == data.length}
+                                ></Button>
+                            </span>
+                        </>
+                    }
+                    <Button icon={<SettingOutlined />} onClick={() => setVisible(true)} type='text' />
+                    <ModalConfiguration1
                         visible={visible}
                         setVisible={setVisible}
                         title={`Configuration ${obj.children}`}
@@ -101,7 +121,6 @@ export const useColumns = ({
                         initialSalary={initialSalary}
                         setInitialSalary={setInitialSalary}
                     />
-                        }
                 </Space>
             )
         }
@@ -505,12 +524,8 @@ export const useColumns = ({
     const [editBL, setEditBL] = useState(false)
     const renderBacLuong = (text, record) => {
         const [parentKey, childKey] = record.key.split('.')
-        if (record.index === 'add')
-            return {
-                children: null,
-                props: { colSpan: 0 }
-            }
-        if (!childKey && !editBL) {
+        const obj = { children: record.bacLuong, props: {} }
+        if (!childKey && !editBL && !addMode) {
             return (
                 <>
                     <span className="mr-5px">{text}</span>
@@ -524,7 +539,7 @@ export const useColumns = ({
                 </>
             )
         }
-        if (!childKey && editBL) {
+        if (!childKey && (editBL || (addMode && parentKey == data.length))) {
             return (
                 <div className="d-flex flex-row jus-content--center">
                     <Input
@@ -535,7 +550,7 @@ export const useColumns = ({
                             setDataValue(`${parentKey}.bacLuong`, e.target.value)
                         }}
                     />
-                    <div className="d-flex flex-column">
+                    {!addMode && <div className="d-flex flex-column">
                         <Button
                             className="btn__editInstant border-0 btn--wh10px"
                             icon={
@@ -557,21 +572,85 @@ export const useColumns = ({
                             }}
                             size="small"
                         ></Button>
-                    </div>
+                    </div>}
                 </div>
             )
         }
-        if (childKey && !editBL) {
-            return text
-        }
-        if (childKey && editBL) {
+        if (childKey && text != 'add') {
             const newVal = `${data[parentKey - 1].bacLuong} - B${childKey}`
             const currentVal = text
+            obj.props.colSpan = 2
             if (newVal !== currentVal && record.text !== 'add') {
                 listCellNeedUpdate.current.push([`${parentKey}.children.${childKey}.bacLuong`, newVal])
             }
-            return <div>{`${data[parentKey - 1].bacLuong} - B${childKey}`}</div>
+            if (newVal !== currentVal && record.text == 'add') {
+                listCellNeedUpdate.current.push([`${parentKey}.children.${childKey}.bacLuong`, newVal])
+            }
+            return (
+                <div className="d-flex flex-row pr-15px">
+                    {<div className="" style={hoverKey === record.key ? { opacity: !hoverNL ? 1 : 0 } : { opacity: 0 }}>
+                        <Popconfirm
+                            cancelButtonProps={{ className: 'pop-confirm__btn' }}
+                            okButtonProps={{ className: 'pop-confirm__btn' }}
+                            title="Chắc chắn xoá?"
+                            onConfirm={() => {
+                                if (isEditMode) {
+                                    onClickDeleteChild(record)
+                                    setDataValue(`${parentKey}.coefficient`, [
+                                        data[parentKey - 1].coefficientAvg,
+                                        data[parentKey - 1].coefficient[1]
+                                    ])
+                                } else {
+                                    onClickDeleteChild(record)
+                                    setDataValue(`${parentKey}.coefficient`, [
+                                        data[parentKey - 1].coefficientAvg,
+                                        data[parentKey - 1].coefficient[1]
+                                    ])
+                                }
+                            }}
+                        >
+                            <CloseOutlined style={{ color: 'rgba(255, 73, 78, 0.5)', marginRight: 10 }} />
+                        </Popconfirm>
+                    </div>}
+                    <div className="mr-auto ml-auto">{`${data[parentKey - 1].bacLuong} - B${childKey}`}</div>
+                </div>
+            )
         }
+
+        if (childKey && text === 'add') {
+            const [parentKey] = record.key.split('.')
+            const siblings = data[parentKey - 1].children
+            const currentLength = siblings.length
+            obj.children = (
+                <div style={{ textAlign: 'left' }}>
+                    <Button
+                        icon={<PlusCircleOutlined className='ml--20px' style={{ color: '#32A1C8' }} />}
+                        type="text"
+                        onClick={() => {
+                            setDataValue(`${parentKey}.children.${currentLength}`, generateNewChild(siblings))
+                            setDataValue(`${parentKey}.children.${currentLength + 1}`, {
+                                key: `${parentKey}.${currentLength + 1}`,
+                                bacLuong: 'add'
+                            })
+                            if (currentLength > 8 && (currentLength - 8) % 2 === 1) {
+                                setDataValue(
+                                    `${parentKey}.coefficientAvg`,
+                                    parseFloat(data[parentKey - 1].coefficientAvg) +
+                                        parseFloat(data[parentKey - 1].coefficient[1])
+                                )
+                                setDataValue(`${parentKey}.coefficient`, [
+                                    parseFloat(data[parentKey - 1].coefficientAvg),
+                                    data[parentKey - 1].coefficient[1]
+                                ])
+                            }
+                        }}
+                    >
+                        Thêm bậc lương
+                    </Button>
+                </div>
+            )
+        }
+        return obj
     }
 
     const renderLVT = (text, record) => {
@@ -710,7 +789,7 @@ export const useColumns = ({
     const [editKpi, setEditKpi] = useState(false)
     const [hoverKpi, setHoverKpi] = useState(false)
     const renderKpiPercent = (text, record) => {
-        if (record.salaryScale === 'add') return null
+        if (record.bacLuong === 'add') return null
         const [parentKey, childKey] = record.key.split('.')
         if (!childKey) {
             return <span>{text}</span>

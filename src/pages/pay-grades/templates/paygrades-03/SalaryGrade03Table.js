@@ -1,41 +1,39 @@
 /* eslint-disable indent */
-import { ExclamationCircleOutlined, MoreOutlined, EditOutlined } from '@ant-design/icons'
-import { Button, Form, Input, Modal, Popover, Select, Table } from 'antd'
+import { ExclamationCircleOutlined, MoreOutlined } from '@ant-design/icons'
+import { Button, Form, Input, Modal, Popover, Select, Space, Table } from 'antd'
 import { ReactComponent as AddActiveIcon } from 'assets/images/add-active.svg'
 import { ReactComponent as AddIcon } from 'assets/images/add.svg'
-import { ReactComponent as CloseIcon } from './icons/close.svg'
-import { ReactComponent as CheckIcon } from './icons/check.svg'
 import { ReactComponent as BonusActiveIcon } from 'assets/images/topnav/bonus-active.svg'
 import withActiveIcon from 'components/withHoverIcon'
-import { rowsMock } from 'pages/pay-grades/initialize-data/_mock03'
-import React, { useLayoutEffect, useRef, useState } from 'react'
+import { columnsMock, rowsMock } from 'pages/pay-grades/initialize-data/_mock03'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import clsx from 'clsx'
 import { formatCurrency } from 'utils/PayGradesHelper'
 import StartingSalaryDropdown from './actions/StartingSalaryDropdown'
 import { deletePayGrade } from './PayGrades03.action'
+// import { selectAmplitude, selectCoefficient, selectLevel } from './PayGrades03.selector'
 import styles from './SalaryGrade03Table.module.scss'
 
 const WithActiveAddIcon = withActiveIcon(AddIcon)
 
 const getCloneCols = cols => cols.map(e => ({ ...e }))
 
-const createColumnsMock = ({ level, amplitude, coefficient }) => {
-    const columnsMock = []
+// const createColumnsMock = (level, amplitude, coefficient) => {
+//     const columnsMock = []
 
-    for (let i = 1; i <= level; i++) {
-        columnsMock.push({
-            label: `Bậc ${i}`,
-            key: `level${i}`,
-            value: {
-                amplitude,
-                coefficient: coefficient + amplitude * (i - 1)
-            }
-        })
-    }
+//     for (let i = 1; i <= level; i++) {
+//         columnsMock.push({
+//             label: `Bậc ${i}`,
+//             key: `level${i}`,
+//             value: {
+//                 amplitude,
+//                 coefficient: coefficient * i
+//             }
+//         })
+//     }
 
-    return columnsMock
-}
+//     return columnsMock
+// }
 
 const createFirstRow = ({ salary, columnsData, titleTable }) => {
     let firstRow = {}
@@ -167,42 +165,16 @@ const createDataSource = ({ salary, columnsData, rowsData, titleTable }) => {
     return dataSource
 }
 
-const createAmplitudeAndCoefficient = ({
-    columnsData,
-    handleAddColumn,
-    handleRemoveColumn,
-    levelSalaryDataIndex,
-    setLevelSalaryDataIndex
-}) => {
+const createAmplitudeAndCoefficient = ({ columnsData, handleAddColumn }) => {
     let amplitudeAndCoefficient = []
 
     columnsData.forEach(({ label, key }) => {
         amplitudeAndCoefficient = [
             ...amplitudeAndCoefficient,
             {
-                title: (
-                    <div className={styles.salaryLevel}>
-                        <CloseIcon
-                            className={clsx({
-                                vVisiable: levelSalaryDataIndex === key
-                            })}
-                            onClick={handleRemoveColumn}
-                        />
-                        {label}
-                    </div>
-                ),
+                title: label,
                 dataIndex: key,
                 align: 'center',
-
-                onHeaderCell: column => ({
-                    onMouseEnter: () => {
-                        setLevelSalaryDataIndex(column.dataIndex)
-                    },
-                    onMouseLeave: () => {
-                        setLevelSalaryDataIndex(null)
-                    }
-                }),
-
                 render: text => text?.label
             }
         ]
@@ -211,23 +183,10 @@ const createAmplitudeAndCoefficient = ({
     return [
         ...amplitudeAndCoefficient,
         {
-            title: (
-                <div style={{ marginLeft: 10 }}>
-                    <WithActiveAddIcon activeIcon={AddActiveIcon} onClick={handleAddColumn} />
-                </div>
-            ),
+            title: <WithActiveAddIcon activeIcon={AddActiveIcon} onClick={handleAddColumn} />,
             fixed: 'right'
         }
     ]
-}
-
-const isExistClickedColumn = titleTableList => {
-    for (const key in titleTableList) {
-        if (titleTableList[key].isClicked) {
-            return true
-        }
-    }
-    return false
 }
 
 const createColumns = ({
@@ -237,213 +196,89 @@ const createColumns = ({
     setDataValue,
     setSalary,
     handleAddColumn,
-    handleRemoveColumn,
-    levelSalaryDataIndex,
-    setLevelSalaryDataIndex,
-    titleTableList,
-    setTitleTableList,
-    handleTitleTableSave,
-    handleTitleTableCancel,
     handleAddRow,
-    handleDeleteRow,
+    isEditingMode,
+    setIsEditingMode,
     visiable,
     setVisiable,
-    handleRowTableSave,
-    handleRowTableCancel,
-    rowTableEditing,
-    setRowTableEditing,
-    indexRowTableDelete,
+    handleSave,
+    handleCancel,
     handleDeleteSession
 }) => {
     const columns = [
         {
-            title: titleTableList.code.isHovered ? (
-                <>
-                    {titleTableList.code.isClicked && (
-                        <div className={styles.flexCenterVertical}>
-                            <Input
-                                autoFocus
-                                onFocus={event => event.target.select()}
-                                value={titleTableList.code.title}
-                                onChange={event => {
-                                    const newTitleTableList = JSON.parse(JSON.stringify(titleTableList))
-                                    newTitleTableList.code.title = event.target.value
-                                    setTitleTableList(newTitleTableList)
-                                }}
-                            />
-
-                            <div className={styles.actions}>
-                                <CheckIcon
-                                    onClick={() => {
-                                        handleTitleTableSave('code')
-                                    }}
-                                />
-                                <CloseIcon
-                                    onClick={() => {
-                                        handleTitleTableCancel('code')
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    )}
-                    <div
-                        className={clsx(styles.titleTableList, {
-                            dNone: titleTableList.code.isClicked
-                        })}
-                    >
-                        {titleTableList.code.title}
-                        <EditOutlined
-                            className={clsx({
-                                dNone: !titleTableList.code.isHovered || isExistClickedColumn(titleTableList)
-                            })}
-                            onClick={() => {
-                                const newTitleTableList = JSON.parse(JSON.stringify(titleTableList))
-                                newTitleTableList.code.isClicked = true
-                                setTitleTableList(newTitleTableList)
-                            }}
-                        />
-                    </div>
-                </>
-            ) : titleTableList.code.isClicked ? (
-                <div className={styles.flexCenterVertical}>
-                    <Input
-                        autoFocus
-                        onFocus={event => event.target.select()}
-                        value={titleTableList.code.title}
-                        onChange={event => {
-                            const newTitleTableList = JSON.parse(JSON.stringify(titleTableList))
-                            newTitleTableList.code.title = event.target.value
-                            setTitleTableList(newTitleTableList)
-                        }}
-                    />
-
-                    <div className={styles.actions}>
-                        <CheckIcon
-                            onClick={() => {
-                                handleTitleTableSave('code')
-                            }}
-                        />
-                        <CloseIcon
-                            onClick={() => {
-                                handleTitleTableCancel('code')
-                            }}
-                        />
-                    </div>
-                </div>
+            title: isEditingMode ? (
+                <Space>
+                    <Button onClick={handleCancel}>Huỷ</Button>
+                    <Button type='primary' onClick={handleSave}>
+                        Lưu
+                    </Button>
+                </Space>
             ) : (
-                <div className={styles.titleTableList}>{titleTableList.code.title}</div>
+                'Ngạch bậc lương'
             ),
             dataIndex: 'code',
             align: 'left',
             colSpan: 2,
-            width: 140,
+            width: 120,
             fixed: 'left',
-
-            onHeaderCell: () => ({
-                onMouseEnter: () => {
-                    setTitleTableList(preState => {
-                        const newTitleTableList = JSON.parse(JSON.stringify(preState))
-                        newTitleTableList.code.isHovered = true
-                        return newTitleTableList
-                    })
-                },
-                onMouseLeave: () => {
-                    setTitleTableList(preState => {
-                        const newTitleTableList = JSON.parse(JSON.stringify(preState))
-                        newTitleTableList.code.isHovered = false
-                        return newTitleTableList
-                    })
-                }
-            }),
-
             render: (text, record, index) => {
                 if (index === 0) {
-                    return rowTableEditing?.rowIndex === index && rowTableEditing?.isClicked ? (
+                    return isEditingMode ? (
                         <div className={styles.flexCenterVertical}>
+                            <BonusActiveIcon className={styles.bonusActiveIcon} />
+
                             <Input
-                                autoFocus
-                                onFocus={event => event.target.select()}
                                 value={text}
                                 onChange={event => {
                                     setDataValue('setTitleTable', event.target.value)
                                 }}
                             />
-
-                            <div className={styles.actions}>
-                                <CheckIcon onClick={handleRowTableSave} />
-                                <CloseIcon onClick={handleRowTableCancel} />
-                            </div>
                         </div>
                     ) : (
-                        !!text && (
-                            <div className={styles.flexCenterVertical}>
-                                <BonusActiveIcon className={styles.bonusActiveIcon} />
-
-                                {text}
-                                {!rowTableEditing?.isClicked && (
-                                    <EditOutlined
-                                        style={{
-                                            marginLeft: 3
-                                        }}
-                                        onClick={() => {
-                                            setRowTableEditing({
-                                                rowIndex: index,
-                                                isClicked: true
-                                            })
-                                        }}
-                                    />
-                                )}
-                                <Popover
-                                    visible={visiable}
-                                    onVisibleChange={setVisiable}
-                                    className={styles.popover}
-                                    content={
-                                        <div className={styles.bnl1Popover}>
-                                            <Button
-                                                type='text'
-                                                danger
-                                                onClick={() => {
-                                                    setVisiable(false)
-                                                    handleDeleteSession()
-                                                }}
-                                            >
-                                                Delete
-                                            </Button>
-                                            <Button type='text'>Config</Button>
-                                        </div>
-                                    }
-                                    trigger='click'
-                                >
-                                    <Button icon={<MoreOutlined />} type='text' />
-                                </Popover>
-                            </div>
-                        )
+                        <div className={styles.flexCenterVertical}>
+                            <BonusActiveIcon className={styles.bonusActiveIcon} />
+                            {text}
+                            <Popover
+                                visible={visiable}
+                                onVisibleChange={setVisiable}
+                                className={styles.popover}
+                                content={
+                                    <div className={styles.bnl1Popover}>
+                                        <Button
+                                            type='text'
+                                            danger
+                                            onClick={() => {
+                                                setVisiable(false)
+                                                handleDeleteSession()
+                                            }}
+                                        >
+                                            Delete
+                                        </Button>
+                                        <Button type='text'>Config</Button>
+                                        <Button
+                                            type='text'
+                                            onClick={() => {
+                                                setVisiable(false)
+                                                setIsEditingMode(true)
+                                            }}
+                                        >
+                                            Edit
+                                        </Button>
+                                    </div>
+                                }
+                                trigger='click'
+                            >
+                                <Button icon={<MoreOutlined />} type='text' disabled={false} />
+                            </Popover>
+                        </div>
                     )
                 }
 
                 if (index === rowsData.length + 1) {
                     return <WithActiveAddIcon activeIcon={AddActiveIcon} onClick={handleAddRow} />
                 }
-
-                if (index !== rowsData.length + 2) {
-                    return (
-                        <div className={styles.rowDelete}>
-                            <CloseIcon
-                                className={clsx({
-                                    vVisiable: indexRowTableDelete === index
-                                })}
-                                onClick={() => {
-                                    handleDeleteRow(index)
-                                }}
-                            />
-                            {text}
-                        </div>
-                    )
-                }
-
-                if (text) {
-                    return text
-                }
+                return text
             }
         },
         {
@@ -452,150 +287,29 @@ const createColumns = ({
             align: 'left',
             colSpan: 0,
             width: 200,
+            editable: isEditingMode,
             fixed: 'left',
-
             render: (text, record, index) => {
                 if (index !== rowsData.length + 1) {
-                    return rowTableEditing?.rowIndex === index && rowTableEditing?.isClicked ? (
-                        <div className={styles.flexCenterVertical}>
-                            <Input
-                                autoFocus
-                                onFocus={event => event.target.select()}
-                                value={text}
-                                onChange={event => {
-                                    setDataValue(`${index - 1}.title`, event.target.value)
-                                }}
-                            />
-
-                            <div className={styles.actions}>
-                                <CheckIcon onClick={handleRowTableSave} />
-                                <CloseIcon onClick={handleRowTableCancel} />
-                            </div>
-                        </div>
+                    return isEditingMode ? (
+                        <Input
+                            value={text}
+                            onChange={event => {
+                                setDataValue(`${index - 1}.title`, event.target.value)
+                            }}
+                        />
                     ) : (
-                        !!text && (
-                            <div className={styles.flexCenterVertical}>
-                                {text}
-                                {!rowTableEditing?.isClicked && (
-                                    <EditOutlined
-                                        style={{
-                                            marginLeft: 3
-                                        }}
-                                        onClick={() => {
-                                            setRowTableEditing({
-                                                rowIndex: index,
-                                                isClicked: true
-                                            })
-                                        }}
-                                    />
-                                )}
-                            </div>
-                        )
+                        text
                     )
                 }
-
                 return text
             }
         },
         {
-            title: titleTableList.rules.isHovered ? (
-                <>
-                    {titleTableList.rules.isClicked && (
-                        <div className={styles.flexCenterVertical}>
-                            <Input
-                                autoFocus
-                                onFocus={event => event.target.select()}
-                                value={titleTableList.rules.title}
-                                onChange={event => {
-                                    const newTitleTableList = JSON.parse(JSON.stringify(titleTableList))
-                                    newTitleTableList.rules.title = event.target.value
-                                    setTitleTableList(newTitleTableList)
-                                }}
-                            />
-
-                            <div className={styles.actions}>
-                                <CheckIcon
-                                    onClick={() => {
-                                        handleTitleTableSave('rules')
-                                    }}
-                                />
-                                <CloseIcon
-                                    onClick={() => {
-                                        handleTitleTableCancel('rules')
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    )}
-                    <div
-                        className={clsx(styles.titleTableList, {
-                            dNone: titleTableList.rules.isClicked
-                        })}
-                    >
-                        {titleTableList.rules.title}
-                        <EditOutlined
-                            className={clsx({
-                                dNone: !titleTableList.rules.isHovered || isExistClickedColumn(titleTableList)
-                            })}
-                            onClick={() => {
-                                const newTitleTableList = JSON.parse(JSON.stringify(titleTableList))
-                                newTitleTableList.rules.isClicked = true
-                                setTitleTableList(newTitleTableList)
-                            }}
-                        />
-                    </div>
-                </>
-            ) : titleTableList.rules.isClicked ? (
-                <div className={styles.flexCenterVertical}>
-                    <Input
-                        autoFocus
-                        onFocus={event => event.target.select()}
-                        value={titleTableList.rules.title}
-                        onChange={event => {
-                            const newTitleTableList = JSON.parse(JSON.stringify(titleTableList))
-                            newTitleTableList.rules.title = event.target.value
-                            setTitleTableList(newTitleTableList)
-                        }}
-                    />
-
-                    <div className={styles.actions}>
-                        <CheckIcon
-                            onClick={() => {
-                                handleTitleTableSave('rules')
-                            }}
-                        />
-                        <CloseIcon
-                            onClick={() => {
-                                handleTitleTableCancel('rules')
-                            }}
-                        />
-                    </div>
-                </div>
-            ) : (
-                <div className={styles.titleTableList}>{titleTableList.rules.title}</div>
-            ),
+            title: 'Quy tắc',
             dataIndex: 'rules',
             align: 'center',
-            width: 120,
             fixed: 'left',
-
-            onHeaderCell: () => ({
-                onMouseEnter: () => {
-                    setTitleTableList(preState => {
-                        const newTitleTableList = JSON.parse(JSON.stringify(preState))
-                        newTitleTableList.rules.isHovered = true
-                        return newTitleTableList
-                    })
-                },
-                onMouseLeave: () => {
-                    setTitleTableList(preState => {
-                        const newTitleTableList = JSON.parse(JSON.stringify(preState))
-                        newTitleTableList.rules.isHovered = false
-                        return newTitleTableList
-                    })
-                }
-            }),
-
             render: (text, record, index) => {
                 if (index === 0) {
                     return (
@@ -618,64 +332,24 @@ const createColumns = ({
             title: '',
             dataIndex: 'amplitudeAndCoefficient',
             align: 'center',
-            width: 120,
             fixed: 'left'
         },
-        ...createAmplitudeAndCoefficient({
-            columnsData,
-            handleAddColumn,
-            handleRemoveColumn,
-            levelSalaryDataIndex,
-            setLevelSalaryDataIndex
-        })
+        ...createAmplitudeAndCoefficient({ columnsData, handleAddColumn })
     ]
 
     return columns
 }
 
 const SalaryGrade03Table = ({ id, titleTable: _titleTable, ...restProps }) => {
-    const [levelSalary, setLevelSalary] = useState({
-        level: 7,
-        amplitude: 0.25,
-        coefficient: 1
-    })
-
-    const [levelSalaryDataIndex, setLevelSalaryDataIndex] = useState(null)
-    const [titleTableList, setTitleTableList] = useState({
-        code: {
-            title: 'Ngạch bậc lương',
-            isHovered: false,
-            isClicked: false
-        },
-        rules: {
-            title: 'Quy tắc',
-            isHovered: false,
-            isClicked: false
-        }
-    })
-    const titleTableListRef = useRef(JSON.parse(JSON.stringify(titleTableList)))
-
-    const handleTitleTableSave = columnName => {
-        const newTitleTableList = JSON.parse(JSON.stringify(titleTableList))
-        newTitleTableList[columnName].isClicked = false
-        newTitleTableList[columnName].isHovered = false
-        titleTableListRef.current = newTitleTableList
-        setTitleTableList(newTitleTableList)
-    }
-    const handleTitleTableCancel = columnName => {
-        titleTableListRef.current[columnName].isClicked = false
-        titleTableListRef.current[columnName].isHovered = false
-        setTitleTableList(titleTableListRef.current)
-    }
-
-    const [rowTableEditing, setRowTableEditing] = useState(null)
-    const [indexRowTableDelete, setIndexRowTableDelete] = useState(null)
-
     const [visiable, setVisiable] = useState(false)
 
+    // const level = useSelector(selectLevel)
+    // const amplitude = useSelector(selectAmplitude)
+    // const coefficient = useSelector(selectCoefficient)
     const dispatch = useDispatch()
 
-    const [columnsData, setColumnsData] = useState(getCloneCols(createColumnsMock(levelSalary)))
+    const [isEditingMode, setIsEditingMode] = useState(false)
+    const [columnsData, setColumnsData] = useState(getCloneCols(columnsMock))
     const [rowsData, setRowsData] = useState(getCloneCols(rowsMock))
     const [titleTable, setTitleTable] = useState(_titleTable)
 
@@ -694,34 +368,36 @@ const SalaryGrade03Table = ({ id, titleTable: _titleTable, ...restProps }) => {
         setVisiableAddRow(false)
     }
 
-    const handleAddColumn = () => {
-        const newLevelSalary = { ...levelSalary }
-        newLevelSalary.level += 1
-        setLevelSalary(newLevelSalary)
+    const setDataValue = (path, value) => {
+        if (path === 'setTitleTable') {
+            setTitleTable(value)
+        } else {
+            const [index, dataIndex] = path.split('.')
+            const newData = [...rowsData]
+            newData[index][dataIndex] = value
+            setRowsData(newData)
+        }
     }
 
-    const handleRemoveColumn = () => {
-        const newLevelSalary = { ...levelSalary }
-        newLevelSalary.level -= 1
-        setLevelSalary(newLevelSalary)
+    // const handleAddColumn = () => {
+    //     dispatch(addLevel())
+    // }
+
+    const handleAddColumn = () => {
+        const newColumData = {
+            label: `Bậc ${columnsData.length + 1}`,
+            key: `level${columnsData.length + 1}`,
+            value: {
+                amplitude: 0.25,
+                coefficient: 1 + columnsData.length * 0.25
+            }
+        }
+
+        setColumnsData([...columnsData, newColumData])
     }
 
     const handleAddRow = () => {
         setVisiableAddRow(true)
-    }
-
-    const handleDeleteRow = index => {
-        Modal.confirm({
-            title: 'Confirm delete',
-            icon: <ExclamationCircleOutlined />,
-            content: 'Are you sure to delete this row?',
-            okText: 'Confirm',
-            cancelText: 'Cancel',
-            onOk: close => {
-                setRowsData([...rowsData].filter((rowData, dataIndex) => dataIndex !== index - 1))
-                close()
-            }
-        })
     }
 
     const handleAddRowSubmit = formValues => {
@@ -736,27 +412,16 @@ const SalaryGrade03Table = ({ id, titleTable: _titleTable, ...restProps }) => {
         setVisiableAddRow(false)
     }
 
-    const setDataValue = (path, value) => {
-        if (path === 'setTitleTable') {
-            setTitleTable(value)
-        } else {
-            const [index, dataIndex] = path.split('.')
-            const newData = [...rowsData]
-            newData[index][dataIndex] = value
-            setRowsData(newData)
-        }
-    }
-
-    const handleRowTableSave = () => {
+    const handleSave = () => {
+        setIsEditingMode(false)
         rowsDataRef.current = getCloneCols(rowsData)
         titleTableRef.current = titleTable
-        setRowTableEditing(null)
     }
 
-    const handleRowTableCancel = () => {
-        setRowsData(getCloneCols(rowsDataRef.current))
+    const handleCancel = () => {
+        setIsEditingMode(false)
+        setRowsData(rowsDataRef.current)
         setTitleTable(titleTableRef.current)
-        setRowTableEditing(null)
     }
 
     const handleDeleteSession = () => {
@@ -786,35 +451,25 @@ const SalaryGrade03Table = ({ id, titleTable: _titleTable, ...restProps }) => {
         setDataValue,
         setSalary,
         handleAddColumn,
-        handleRemoveColumn,
-        levelSalaryDataIndex,
-        setLevelSalaryDataIndex,
-        titleTableList,
-        setTitleTableList,
-        handleTitleTableSave,
-        handleTitleTableCancel,
         handleAddRow,
-        handleDeleteRow,
+        isEditingMode,
+        setIsEditingMode,
         visiable,
         setVisiable,
-        handleRowTableSave,
-        handleRowTableCancel,
-        rowTableEditing,
-        setRowTableEditing,
-        indexRowTableDelete,
-        setIndexRowTableDelete,
+        handleSave,
+        handleCancel,
         handleDeleteSession
     })
 
-    useLayoutEffect(() => {
-        setColumnsData(createColumnsMock(levelSalary))
-    }, [levelSalary])
+    // useEffect(() => {
+    //     setColumnsData(createColumnsMock(level, amplitude, coefficient))
+    // }, [level, amplitude, coefficient])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         setDataSource(createDataSource({ salary, columnsData, rowsData, titleTable }))
     }, [salary, titleTable, rowsData, columnsData])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const colspanElements = document.querySelectorAll(
             `.${styles.salaryGrade03} tbody > tr:nth-child(2) > td:nth-child(1)`
         )
@@ -839,15 +494,7 @@ const SalaryGrade03Table = ({ id, titleTable: _titleTable, ...restProps }) => {
                 pagination={false}
                 className={styles.salaryGrade03}
                 rowClassName={(record, index) => index === dataSource.length - 1 && styles.summaryRow}
-                scroll={{ x: 'max-content', y: 260 }}
-                onRow={(record, index) => ({
-                    onMouseEnter: () => {
-                        setIndexRowTableDelete(index)
-                    },
-                    onMouseLeave: () => {
-                        setIndexRowTableDelete(-1)
-                    }
-                })}
+                scroll={{ x: 'max-content' }}
             />
 
             <Modal

@@ -1,16 +1,10 @@
 import { Button, Select, Table } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { generateNewNL } from 'utils/PayGrades02Helper'
-import { data as _initialData, pcCols as _pcCols, applyForData as _applyForData } from 'pages/pay-grades/initialize-data/_mock02'
-import { filterData } from 'pages/pay-grades/initialize-data/_mock02'
+import { data as _initialData, pcCols as _pcCols } from 'pages/pay-grades/initialize-data/_mock02'
+import { filterData, initialSalary as _initialSalary, applyForData as _applyForData } from 'pages/pay-grades/initialize-data/_masterData'
 import 'pages/pay-grades/PayGrades.scss'
 import { useColumns } from './useColumns'
-import {
-    STARTING_SALARY_ONE_TITLE,
-    STARTING_SALARY_ONE_VALUE,
-    STARTING_SALARY_TWO_TITLE,
-    STARTING_SALARY_TWO_VALUE
-} from 'constants/constants'
 
 const { Option } = Select
 
@@ -39,7 +33,6 @@ export const PayGrades02 = () => {
     const [coDinhHeSo, setCoDinhHeSo] = useState(false)
     const [expandedKeys, setExpandedKeys] = useState(initialData.map((e) => e.key))
     const [editingKey, setEditingKey] = useState('')
-    const [luongKhoiDiem, setLuongKhoiDiem] = useState(4_500_000)
     const [data, setData] = useState(initialData)
     const [pcCols, setPcCols] = useState(_pcCols)
     const [applyForData, setApplyForData] = useState(_applyForData)
@@ -55,6 +48,8 @@ export const PayGrades02 = () => {
     const [editApply, setEditApply] = useState(false)
     const [keyEdit, setKeyEdit] = useState(0)
     const [addModeNL, setAddModeNL] = useState(false)
+    const [luongKhoiDiem, setLuongKhoiDiem] = useState(_initialSalary[0].value)
+
     const setDataValue = (path, value) => {
         const [parentKey, parentDataIdx, childKey, childDataIdx] = path.split('.')
         const parentIdx = parseInt(parentKey) - 1
@@ -80,6 +75,7 @@ export const PayGrades02 = () => {
         const [parentKey, childKey] = record.key.split('.')
         return !!childKey && parseFloat(record.coefficient) === parseFloat(data[parentKey - 1].coefficientAvg)
     }
+
     const edit = (record) => {
         setEditingKey(record.key)
         if (!expandedKeys.includes(record.key)) toggleExpandedKeys(record.key)
@@ -287,8 +283,9 @@ export const PayGrades02 = () => {
                     <div className="table__header__text">
                         <span>Giá trị lương khởi điểm</span>
                         <Select bordered={false} value={luongKhoiDiem} onChange={(val) => setLuongKhoiDiem(val)}>
-                            <Option value={STARTING_SALARY_ONE_VALUE}>{STARTING_SALARY_ONE_TITLE}</Option>
-                            <Option value={STARTING_SALARY_TWO_VALUE}>{STARTING_SALARY_TWO_TITLE}</Option>
+                            {_initialSalary.map((data) => {
+                                return <Option key={data.value} value={data.value}>{data.value}</Option>
+                            })}
                         </Select>
                     </div>
                 </div>

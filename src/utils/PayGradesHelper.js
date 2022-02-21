@@ -1,7 +1,7 @@
 const NLDefault = {
     key: '1',
-    ngachLuong: '[Tên ngạch lương]',
-    apDung: '[Đối tượng]',
+    ngachLuong: '[Tên ngạch]',
+    apDung: [],
     index: '1',
     bacLuong: '[Mã]',
     heSo: [3, 0.4],
@@ -18,112 +18,112 @@ const NLDefault = {
     children: [
         {
             key: '1.1',
-            ngachLuong: 'sol1',
+            ngachLuong: '',
             index: '1.1',
             bacLuong: 'QLDH - B1',
-            heSo: 1.8,
-            luongViTri: 8_100_000,
-            lcbPercent: 70,
-            lcb: 10_170_000,
-            kpiPercent: 30,
-            lkpi: '2.430.000',
-            phuCapUnit1: '2',
+            heSo: 1,
+            luongViTri: 0,
+            lcbPercent: null,
+            lcb: 0,
+            kpiPercent: null,
+            lkpi: 0,
+            phuCapUnit1: 2,
             phuCapValue1: 0,
             tong: 0,
             ghiChu: ''
         },
         {
             key: '1.2',
-            ngachLuong: 'sol2',
+            ngachLuong: '',
             index: '1.2',
-            bacLuong: 'QLDH - B1',
-            heSo: 2.2,
-            luongViTri: 9_900_000,
-            lcbPercent: 70,
-            lcb: 10_170_000,
-            kpiPercent: 30,
-            lkpi: '2.430.000',
-            phuCapUnit1: '2',
+            bacLuong: 'QLDH - B2',
+            heSo: 1,
+            luongViTri: 0,
+            lcbPercent: null,
+            lcb: 0,
+            kpiPercent: null,
+            lkpi: 0,
+            phuCapUnit1: 2,
             phuCapValue1: 0,
             tong: 0,
             ghiChu: ''
         },
         {
             key: '1.3',
-            ngachLuong: 'sol3',
+            ngachLuong: '',
             index: '1.3',
-            bacLuong: 'QLDH - B1',
-            heSo: 2.6,
-            luongViTri: 11_700_000,
-            lcbPercent: 70,
-            lcb: 10_170_000,
-            kpiPercent: 30,
-            lkpi: '2.430.000',
-            phuCapUnit1: '2',
+            bacLuong: 'QLDH - B3',
+            heSo: 1,
+            luongViTri: 0,
+            lcbPercent: null,
+            lcb: 0,
+            kpiPercent: null,
+            lkpi: 0,
+            phuCapUnit1: 2,
             phuCapValue1: 0,
             tong: 0,
             ghiChu: ''
         },
         {
             key: '1.4',
-            ngachLuong: 'sol4',
+            ngachLuong: '',
             index: '1.4',
-            bacLuong: 'QLDH - B2',
-            heSo: 3,
-            luongViTri: 13_500_000,
-            lcbPercent: 70,
-            lcb: 10_170_000,
-            kpiPercent: 30,
-            lkpi: '2.430.000',
-            phuCapUnit1: '2',
+            bacLuong: 'QLDH - B4',
+            heSo: 1,
+            luongViTri: 0,
+            lcbPercent: null,
+            lcb: 0,
+            kpiPercent: null,
+            lkpi: 0,
+            phuCapUnit1: 2,
             phuCapValue1: 0,
             tong: 0,
             ghiChu: ''
         },
         {
             key: '1.5',
-            ngachLuong: 'sol5',
+            ngachLuong: '',
             index: '1.5',
-            bacLuong: 'QLDH - B3',
-            heSo: 3.4,
-            luongViTri: 15_300_000,
-            lcbPercent: 70,
-            lcb: 10_170_000,
-            kpiPercent: 30,
-            lkpi: '2.430.000',
-            phuCapUnit1: '2',
+            bacLuong: 'QLDH - B5',
+            heSo: 1,
+            luongViTri: 0,
+            lcbPercent: null,
+            lcb: 0,
+            kpiPercent: null,
+            lkpi: 0,
+            phuCapUnit1: 2,
             phuCapValue1: 0,
             tong: 0,
             ghiChu: ''
         },
         {
             key: '1.6',
-            ngachLuong: 'sol5',
+            ngachLuong: '',
             index: '1.6',
-            bacLuong: 'QLDH - B3',
-            heSo: 3.8,
-            luongViTri: 17_100_000,
-            lcbPercent: 70,
-            lcb: 10_170_000,
-            kpiPercent: 30,
-            lkpi: '2.430.000',
-            phuCapUnit1: '2',
+            bacLuong: 'QLDH - B6',
+            heSo: 1,
+            luongViTri: 0,
+            lcbPercent: null,
+            lcb: 0,
+            kpiPercent: null,
+            lkpi: 0,
+            phuCapUnit1: 2,
             phuCapValue1: 0,
             tong: 0,
             ghiChu: ''
         },
         {
             key: '1.7',
-            ngachLuong: 'sol5',
+            ngachLuong: '',
             index: '1.7',
-            bacLuong: 'QLDH - B3',
-            heSo: 4.2,
-            luongViTri: 18_900_000,
-            lcbPercent: 70,
-            lcb: 10_170_000,
-            kpiPercent: 30,
-            lkpi: '2.430.000',
-            phuCapUnit1: '2',
+            bacLuong: 'QLDH - B7',
+            heSo: 1,
+            luongViTri: 0,
+            lcbPercent: null,
+            lcb: 0,
+            kpiPercent: null,
+            lkpi: 0,
+            phuCapUnit1: 2,
             phuCapValue1: 0,
             tong: 0,
             ghiChu: ''
@@ -144,10 +144,17 @@ export const getNgachLuongInfo = (data, key) => {
     return [row.ngachLuong, row.apDung]
 }
 
-export const calculateHeSo = (avg, jump, index, length) => {
-    const a = Math.floor((length - 1) / 2)
-    const base = avg - a * jump
-    return base + index * jump
+export const calculateHeSo = (avg, jump, index, length, calculationType) => {
+    if (calculationType == 2 ) {
+        const num = avg + jump * index
+        return Number(num)
+    }
+    if (calculationType == 1) {
+        const a = Math.floor((length - 1) / 2)
+        const base = avg - a * jump
+        const num = base + index * jump
+        return Number(num)
+    }
 }
 
 export const formatCurrency = number => {
@@ -158,13 +165,28 @@ export const formatCurrency = number => {
 }
 
 export const generateNewNL = data => {
+    // eslint-disable-next-line no-debugger
     const newNL = NLDefault
     newNL.key = `${data.length + 1}`
     newNL.index = newNL.key
+    newNL.applyFor = []
+    newNL.loaiHeSo = 1
     newNL.children.forEach((e, idx, arr) => {
         e.key = `${newNL.key}.${idx + 1}`
         e.index = idx === arr.length - 1 ? 'add' : e.key
+        e.heSo = idx === arr.length - 1 ? undefined : 1
+        e.lcbPercent = idx === arr.length - 1 ? undefined : 30
+        e.lcb = idx === arr.length - 1 ? undefined : 0
+        e.kpiPercent = idx === arr.length - 1 ? undefined : 30
+        e.lkpi = idx === arr.length - 1 ? undefined : 0
+        e.phuCapUnit1 = idx === arr.length - 1 ? undefined : 30
+        e.phuCapValue1 = idx === arr.length - 1 ? undefined : 0
+        e.bacLuong = idx === arr.length - 1 ? undefined : ''
+        e.tong = idx === arr.length - 1 ? undefined : 0
+        e.ghiChu = idx === arr.length - 1 ? undefined : ''
+
     })
+
     return newNL
 }
 

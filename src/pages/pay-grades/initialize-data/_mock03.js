@@ -1,4 +1,4 @@
-export const rowsMock = [
+const rowsMock = [
     {
         code: 'N1-LCB',
         title: 'Lương cơ bản',
@@ -24,3 +24,48 @@ export const rowsMock = [
         amplitudeAndCoefficient: ''
     }
 ]
+
+const columnsMock = [
+    {
+        label: 'Bậc 1',
+        key: 'level1',
+        value: {
+            amplitude: 0.25,
+            coefficient: 1
+        }
+    },
+    {
+        label: 'Bậc 2',
+        key: 'level2',
+        value: {
+            amplitude: 0.25,
+            coefficient: 1.25
+        }
+    },
+    {
+        label: 'Bậc 3',
+        key: 'level3',
+        value: {
+            amplitude: 0.25,
+            coefficient: 1.5
+        }
+    },
+    {
+        label: 'Bậc 4',
+        key: 'level4',
+        value: {
+            amplitude: 0.25,
+            coefficient: 1.75
+        }
+    },
+    {
+        label: 'Bậc 5',
+        key: 'level5',
+        value: {
+            amplitude: 0.25,
+            coefficient: 2
+        }
+    }
+]
+
+export { rowsMock, columnsMock }

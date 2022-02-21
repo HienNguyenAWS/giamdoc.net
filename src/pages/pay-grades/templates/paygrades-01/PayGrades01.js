@@ -1,15 +1,10 @@
 import { Button, Select, Table } from 'antd'
-import { data as _initialData, filterData, pcCols as _pcCols } from 'pages/pay-grades/initialize-data/_mock01'
+import { data as _initialData, pcCols as _pcCols } from 'pages/pay-grades/initialize-data/_mock01'
+import { filterData, initialSalary as _initialSalary, applyForData as _applyForData  } from 'pages/pay-grades/initialize-data/_masterData'
 import 'pages/pay-grades/PayGrades.scss'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { generateNewChild, generateNewNL } from 'utils/PayGradesHelper'
 import { useColumns } from './useColumns'
-import {
-    STARTING_SALARY_ONE_TITLE,
-    STARTING_SALARY_ONE_VALUE,
-    STARTING_SALARY_TWO_TITLE,
-    STARTING_SALARY_TWO_VALUE
-} from 'constants/constants'
 
 const { Option } = Select
 
@@ -30,15 +25,11 @@ const transformData = d => {
 const initialData = transformData(_initialData)
 
 const PayGrades01 = () => {
-    // const [currentTab, setCurrentTab] = useState('ngach-bac-luong');
-    // const handleClickTab = (e) => {
-    //     setCurrentTab(e.key);
-    // };
-
     const [expandedKeys, setExpandedKeys] = useState(initialData.map(e => e.key))
     const [editingKey, setEditingKey] = useState('')
-    const [luongKhoiDiem, setLuongKhoiDiem] = useState(4_500_000)
     const [data, setData] = useState(initialData)
+    const [initialSalary, setInitialSalary] = useState(_initialSalary)
+    const [luongKhoiDiem, setLuongKhoiDiem] = useState(initialSalary[0].value)
     const [pcCols, setPcCols] = useState(_pcCols)
     const countPcCols = useRef(1)
     const initialDataRef = useRef(getCloneData(initialData))
@@ -47,6 +38,7 @@ const PayGrades01 = () => {
     const listCellNeedUpdate = useRef([])
     const [addMode, setAddMode] = useState(false)
     const [filterSection, setFilterSection] = useState(filterData)
+    const [applyForData, setApplyForData] = useState(_applyForData)
 
     const setDataValue = (path, value) => {
         const [parentKey, parentDataIdx, childKey, childDataIdx] = path.split('.')
@@ -70,10 +62,7 @@ const PayGrades01 = () => {
     const isEditing = record => !!(record.key === editingKey || record.key.startsWith(`${editingKey}.`))
     const isEditMode = !!editingKey
     const isHeSoAvgRow = record => {
-        // console.log(record)
         const [parentKey, childKey] = record.key.split('.')
-        // console.log(parentKey)
-        // console.log(data[parentKey - 1].heSo[0])
         return !!childKey && parseFloat(record.heSo) === parseFloat(data[parentKey - 1].heSo[0])
     }
     const edit = record => {
@@ -83,7 +72,7 @@ const PayGrades01 = () => {
 
     const cancel = () => {
         setEditingKey('')
-        setData(initialDataRef.current.slice())
+        setData(getCloneData(initialDataRef.current.slice()))
         setPcCols(initialPcColRef.current.slice())
         setAddMode(false)
     }
@@ -99,6 +88,21 @@ const PayGrades01 = () => {
             }
         })
     }
+
+    const toUp = (record) => {
+        const newData = data;
+        [newData[record-1], newData[record-2]] = [newData[record-2], newData[record-1]]
+        setData(getCloneData(newData))
+        initialDataRef.current = getCloneData(newData)
+    }
+
+    const toDown = (record) => {
+        const newData = data;
+        [newData[record-1], newData[record]] = [newData[record], newData[record-1]]
+        setData(getCloneData(newData))
+        initialDataRef.current = getCloneData(newData)
+    }
+
     const save = async () => {
         try {
             // call api
@@ -196,7 +200,14 @@ const PayGrades01 = () => {
         edit,
         save,
         cancel,
-        initialDataRef
+        initialDataRef,
+        applyForData,
+        setApplyForData,
+        toDown,
+        toUp,
+        initialSalary,
+        setInitialSalary,
+        setLuongKhoiDiem
     })
     useEffect(() => {
         if (listCellNeedUpdate.current) {
@@ -205,10 +216,6 @@ const PayGrades01 = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [listCellNeedUpdate.current])
-    // useEffect(() => {
-    //     console.log(data[0].heSo, data[0].children);
-    //     // console.log(data);
-    // }, [data]);
     const [addOverlayBounding, setAddOverlayBounding] = useState([])
     const wrapperBoundingRef = useRef(null)
     useEffect(() => {
@@ -245,8 +252,6 @@ const PayGrades01 = () => {
         setData(filterData)
     }
 
-    console.log(filterSection)
-
     return (
         <div className='bang-ngach-luong-1'>
             <div ref={wrapperBoundingRef} className='bang-ngach-luong-1__table'>
@@ -267,15 +272,10 @@ const PayGrades01 = () => {
                     />
                     <div className='table__header__text'>
                         <span>Giá trị lương khởi điểm</span>
-                        <Select
-                            bordered={false}
-                            value={luongKhoiDiem}
-                            onChange={val => {
-                                setLuongKhoiDiem(val)
-                            }}
-                        >
-                            <Option value={STARTING_SALARY_ONE_VALUE}>{STARTING_SALARY_ONE_TITLE}</Option>
-                            <Option value={STARTING_SALARY_TWO_VALUE}>{STARTING_SALARY_TWO_TITLE}</Option>
+                        <Select bordered={false} value={luongKhoiDiem} onChange={(val) => setLuongKhoiDiem(val)}>
+                            {initialSalary.map((data) => {
+                                return <Option key={data.value} value={data.value}>{data.value}</Option>
+                            })}
                         </Select>
                     </div>
                 </div>

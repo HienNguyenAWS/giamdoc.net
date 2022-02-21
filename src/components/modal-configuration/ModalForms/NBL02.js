@@ -1,36 +1,26 @@
 import React, { useState } from 'react'
-import { Checkbox, Divider, Form, Input, Radio, Button, Space } from 'antd'
-import { initDataValue } from 'pages/pay-grades/initialize-data/_masterData'
-import { applyForData } from 'pages/pay-grades/initialize-data/_masterData'
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
-import '../ModalConfiguration.scss'
+import { Checkbox, Divider, Form, Input, Radio, Button } from 'antd'
 
 const CheckboxGroup = Checkbox.Group
 
 const plainOptions = ['Giám đốc', 'Trợ lý giám đốc', 'Quản lý điều hành', 'Nhân viên']
-// const defaultCheckedList = ['Giám đốc']
+const defaultCheckedList = ['Giám đốc']
 
-const NBL02 = ( { recordInfo, setData }) => {
-
-    console.log(initDataValue)
+const NBL02 = ( { recordInfo, setData, save, setVisible, cancel }) => {
 
     const [coefficient, setCoefficient] = useState(recordInfo.coefficient[0])
     const [jump, setCoefficientJump] = useState(recordInfo.coefficient[1])
-    const [coefficientFlg, setCoefficientFlg] = useState(recordInfo.coefficientFlg)
-    const [kpi, setKpi] = useState(recordInfo.kpiDefault)
-    const [allowance, setAllowance] = useState(recordInfo.allowanceDefault)
-    const [applyFor, setApplyFor] = useState(recordInfo.applyFor)
-    const [note, setNote] = useState(recordInfo.note)
+    const [coefficientFlg, setCoefficientFlg] = useState(1)
+    const [kpi, setKpi] = useState(30)
+    const [allowance, setAllowance] = useState(40)
+    const [applyFor, setApplyFor] = useState(defaultCheckedList)
+    const [note, setNote] = useState('Note')
     const [status, setStatus] = useState(1)
     const [indeterminate, setIndeterminate] = React.useState(true)
     const [checkAll, setCheckAll] = React.useState(false)
 
     const [form] = Form.useForm()
     const { TextArea } = Input
-
-    // const onChangeIntValue = (e) => {
-    //     setCoefficient(e.target.value)
-    // }
 
     const onChangeCoefficient = (e) => {
         setCoefficient(e.target.value)
@@ -73,16 +63,14 @@ const NBL02 = ( { recordInfo, setData }) => {
         setCheckAll(e.target.checked)
     }
 
-    const onChangeInitValue = e => {
-        console.log('radio checked', e.target.value)
-        // this.setState({
-        //     value: e.target.value
-        // })
-    }
-
 
     const onFinish = (values) => {
-        setData(`${recordInfo.key}.coefficient`, [coefficient, jump])
+        setData(`${recordInfo.key - 1}.coefficient`, [coefficient, jump])
+        setData(`${recordInfo.key - 1}.coefficientFlg`, coefficientFlg)
+        setData(`${recordInfo.key - 1}.kpiDefault`, kpi)
+        setData(`${recordInfo.key - 1}.allowanceDefault`, allowance)
+        save
+        setVisible(false)
         console.log('Success:', values)
     }
 
@@ -91,7 +79,8 @@ const NBL02 = ( { recordInfo, setData }) => {
     }
 
     const onClose = () => {
-        console.log('aaaa')
+        cancel
+        setVisible(false)
     }
 
     return (
@@ -103,63 +92,6 @@ const NBL02 = ( { recordInfo, setData }) => {
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
         >
-            {/* <Form.Item
-                label="Giá trị lương khởi điểm"
-            >
-                {initDataValue.map((data => {
-                    <Input />
-                }))}
-            </Form.Item> */}
-
-            <Form.List
-            >
-                {(initDataValue, { add, remove }, { errors }) => (
-                    <>
-                        <Form.Item
-                            label="Giá trị lương khởi điểm"
-                        >
-                            {initDataValue.map((field, index) => (
-                                <Form.Item
-                                    key={field.key}
-                                    style={{ marginBottom: '5px' }}
-                                >
-                                    {/* <Form.Item
-                                        {...field}
-                                        validateTrigger={['onChange', 'onBlur']}
-                                        rules={[
-                                            {
-                                                required: true,
-                                                whitespace: true,
-                                                message: 'Please input passenger\'s name or delete this field.'
-                                            }
-                                        ]}
-                                        style={{ marginBottom: '5px' }}
-                                    > */}
-                                    <Input value={field.value} style={{ width: '85%' }} />
-                                    <MinusCircleOutlined
-                                        className="dynamic-delete-button"
-                                        onClick={() => remove(field.name)}
-                                    />
-                                </Form.Item>
-                                // </Form.Item>
-                            ))}
-                        </Form.Item>
-
-                        <Form.Item>
-                            <Button
-                                type="dashed"
-                                onClick={() => add()}
-                                style={{ width: '60%' }}
-                                icon={<PlusOutlined />}
-                            >
-                                Thêm giá trị
-                            </Button>
-                        </Form.Item>
-                        <Form.ErrorList errors={errors} />
-                    </>
-                )}
-            </Form.List>
-
             <Form.Item label="Hệ số & bước nhảy" style={{ marginBottom: 0 }}>
                 <Form.Item
                     style={{ display: 'inline-block', width: 'calc(50% - 20px)' }}

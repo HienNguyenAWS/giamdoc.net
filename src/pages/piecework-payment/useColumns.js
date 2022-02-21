@@ -106,7 +106,6 @@ export const useColumns = ({
     const renderIndex = (text, record) => {
         const isChild = record.key.includes('.')
         const [parentKey, childKey] = record.key.split('.')
-        console.log(childKey)
         const obj = { children: record.key, props: {} }
         if (text === 'add') {
             const [parentKey] = record.key.split('.')
@@ -731,13 +730,6 @@ export const useColumns = ({
                 </div>
             )
         }
-        // if (parentKey && !editNgayCong) {
-        //     return <div>
-        //         <span className='pl-20px'>{text}</span>
-        //         <Button className='btn__editInstant border-0' icon={<Pen></Pen>} onClick={() => {setKeyEdit(record.key)
-        //             setEditNgayCong(true)}} style={(hoverKey == record.key && hoverNgayCong && record.index !== 'add') ? { opacity : '1' } : { opacity: '0' }}></Button>
-        //     </div>
-        // }
         if (parentKey && editNgayCong && keyEdit == record.key) {
             return (
                 <div className="d-flex flex-row">
@@ -935,7 +927,6 @@ export const useColumns = ({
                     const newTitleTableList = JSON.parse(JSON.stringify(titleTableList))
                     newTitleTableList.infor.isClicked = true
                     setTitleTableList(newTitleTableList)
-                    console.log(456)
                     }}/>
                 </div>
             ),
@@ -1069,7 +1060,6 @@ export const useColumns = ({
                                     const newTitleTableList = JSON.parse(JSON.stringify(titleTableList))
                                     newTitleTableList.budget.isClicked = true
                                     setTitleTableList(newTitleTableList)
-                                    console.log(456)
                                 }}/>
                             </div>
                             ),
@@ -1500,15 +1490,13 @@ export const useColumns = ({
                                 align: 'left',
                                 className: 'cell--border-right',
                                 dataIndex: 'ghiChu',
-                                onCell: (_, index) => {
-                                    if (index === 0 ) {
-                                    return { rowSpan: 2 }
-                                    }
-                                    if (index === 1) {
-                                        return { rowSpan: 0 }
+                                onCell: (record) => {
+                                    const [parent, childKey] = record.key.split('.')
+                                    if (!childKey) {
+                                        return { rowSpan: 2 }
                                     }
                                 }
-                            }]  
+                            }]
                         }
                     ]
                 }

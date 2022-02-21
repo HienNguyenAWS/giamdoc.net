@@ -30,6 +30,7 @@ export const PayGrades02 = () => {
     // const handleClickTab = (e) => {
     //     setCurrentTab(e.key)
     // }
+    const [initialSalary, setInitialSalary] = useState(_initialSalary)
     const [coDinhHeSo, setCoDinhHeSo] = useState(false)
     const [expandedKeys, setExpandedKeys] = useState(initialData.map((e) => e.key))
     const [editingKey, setEditingKey] = useState('')
@@ -212,7 +213,10 @@ export const PayGrades02 = () => {
         keyEdit,
         setKeyEdit,
         addModeNL,
-        setAddModeNL
+        setAddModeNL,
+        initialSalary,
+        setInitialSalary,
+        setLuongKhoiDiem
     })
     useEffect(() => {
         if (listCellNeedUpdate.current) {
@@ -279,11 +283,10 @@ export const PayGrades02 = () => {
                             onChangeFilterNgachLuong(val)
                         }}
                     />
-
-                    <div className="table__header__text">
+                    <div className='table__header__text'>
                         <span>Giá trị lương khởi điểm</span>
                         <Select bordered={false} value={luongKhoiDiem} onChange={(val) => setLuongKhoiDiem(val)}>
-                            {_initialSalary.map((data) => {
+                            {initialSalary.map((data) => {
                                 return <Option key={data.value} value={data.value}>{data.value}</Option>
                             })}
                         </Select>

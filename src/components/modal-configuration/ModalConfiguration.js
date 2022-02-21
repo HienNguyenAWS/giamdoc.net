@@ -4,7 +4,8 @@ import 'antd/dist/antd.css'
 
 import NBL02 from './ModalForms/NBL02'
 
-const ModalConfiguration = ({ visible, setVisible, title, onCancel, recordInfo, setData, save, cancel }) => {
+const ModalConfiguration = ({ visible, setVisible, title, onCancel, recordInfo, setData, save, cancel,
+    luongKhoiDiem, setLuongKhoiDiem, initialSalary, setInitialSalary, applyForData }) => {
 
     return (
         <Modal
@@ -13,7 +14,12 @@ const ModalConfiguration = ({ visible, setVisible, title, onCancel, recordInfo, 
             onCancel={onCancel}
             footer={null}
         >
-            <NBL02 recordInfo={recordInfo} setData={setData} save={save} setVisible={setVisible} cancel={cancel} />
+            <NBL02 recordInfo={recordInfo} setData={setData} save={save} setVisible={setVisible} cancel={cancel}
+            luongKhoiDiem={luongKhoiDiem}
+            setLuongKhoiDiem={setLuongKhoiDiem}
+            initialSalary={initialSalary}
+            setInitialSalary={setInitialSalary}
+            applyForData={applyForData} />
         </Modal>
     )
 }

@@ -6,8 +6,9 @@ const CheckboxGroup = Checkbox.Group
 const plainOptions = ['Giám đốc', 'Trợ lý giám đốc', 'Quản lý điều hành', 'Nhân viên']
 const defaultCheckedList = ['Giám đốc']
 
-const NBL02 = ( { recordInfo, setData, save, setVisible, cancel }) => {
-
+const NBL02 = ( { recordInfo, setData, save, setVisible, cancel , setLuongKhoiDiem, initialSalary, setInitialSalary }) => {
+    const [initialSalary1, setInitialSalary1] = useState(initialSalary[0].value)
+    const [initialSalary2, setInitialSalary2] = useState(initialSalary[1].value)
     const [coefficient, setCoefficient] = useState(recordInfo.coefficient[0])
     const [jump, setCoefficientJump] = useState(recordInfo.coefficient[1])
     const [coefficientFlg, setCoefficientFlg] = useState(1)
@@ -21,6 +22,14 @@ const NBL02 = ( { recordInfo, setData, save, setVisible, cancel }) => {
 
     const [form] = Form.useForm()
     const { TextArea } = Input
+
+    const onChangeSalary1 = (e) => {
+        setInitialSalary1( e.target.value)
+    }
+
+    const onChangeSalary2 = (e) => {
+        setInitialSalary2(e.target.value)
+    }
 
     const onChangeCoefficient = (e) => {
         setCoefficient(e.target.value)
@@ -69,6 +78,13 @@ const NBL02 = ( { recordInfo, setData, save, setVisible, cancel }) => {
         setData(`${recordInfo.key - 1}.coefficientFlg`, coefficientFlg)
         setData(`${recordInfo.key - 1}.kpiDefault`, kpi)
         setData(`${recordInfo.key - 1}.allowanceDefault`, allowance)
+        setInitialSalary([{
+            value: initialSalary1
+        },
+        {
+            value: initialSalary2
+        }])
+        setLuongKhoiDiem(initialSalary1)
         save
         setVisible(false)
         console.log('Success:', values)
@@ -92,6 +108,35 @@ const NBL02 = ( { recordInfo, setData, save, setVisible, cancel }) => {
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
         >
+            <Form.Item label="Lương khởi điểm" style={{ marginBottom: 0 }}>
+                <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 20px)' }}>
+                    <div className='input__normal'>
+                        <Input
+                            className="input--hideArrow border-0"
+                            type={'number'}
+                            onChange={onChangeSalary1}
+                            value={initialSalary1}
+                        />
+                    </div>
+                    <div className="d-none color-red font-size-12px">
+                        Sai giá trị
+                    </div>
+                </Form.Item>
+                <Form.Item style={{ display: 'inline-block', width: '50%', margin: '0 8px' }}>
+                    <div className='input__normal'>
+                        <Input
+                            className="input--hideArrow border-0"
+                            type={'number'}
+                            onChange={onChangeSalary2}
+                            value={initialSalary2}
+                        />
+                    </div>
+                    <div className="d-none color-red font-size-12px">
+                        Sai giá trị
+                    </div>
+                </Form.Item>
+            </Form.Item>
+
             <Form.Item label="Hệ số & bước nhảy" style={{ marginBottom: 0 }}>
                 <Form.Item
                     style={{ display: 'inline-block', width: 'calc(50% - 20px)' }}

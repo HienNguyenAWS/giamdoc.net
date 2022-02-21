@@ -2,7 +2,6 @@
 import {
     CloseOutlined,
     DownOutlined,
-    SortAscendingOutlined,
     UpOutlined,
     PlusCircleOutlined,
     ExclamationCircleOutlined,
@@ -12,7 +11,7 @@ import {
 import { Button, Input, Popconfirm, Select, Space } from 'antd'
 import clsx from 'clsx'
 // import Modal from 'antd/lib/modal/Modal';
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState } from 'react'
 import { calculateHeSo, formatCurrency, generateNewChild, getNgachLuongInfo, getNumChild } from 'utils/PayGradesHelper'
 import ModalConfiguration1 from 'components/modal-configuration/ModalConfiguration1'
 import Pen from 'pages/pay-grades/components/Pen'
@@ -22,7 +21,6 @@ import ArrowDown from 'pages/pay-grades/components/ArrowDown'
 const { Option } = Select
 
 export const useColumns = ({
-    addMode,
     updatePcColTitle,
     addNewPcCol,
     pcCols,
@@ -40,15 +38,12 @@ export const useColumns = ({
     cancel,
     toDown,
     toUp,
-    initialDataRef,
     applyForData,
-    setApplyForData,
     initialSalary,
     setInitialSalary,
     setLuongKhoiDiem
 }) => {
     const [visible, setVisible] = useState(false)
-    const [formRef, setFormRef] = useState(null)
 
     const [configKey, setConfigKey] = useState(null)
 
@@ -58,7 +53,6 @@ export const useColumns = ({
     const [editApply, setEditApply] = useState(false)
 
     const renderNgachLuong = (text, record) => {
-        const editable = isEditing(record)
         const [parentKey, childKey] = record.key.split('.')
         const obj = { children: text, props: {} }
 
@@ -87,13 +81,13 @@ export const useColumns = ({
                             disabled={record.key == data.length}
                         ></Button>
                     </span>
-                    <Button icon={<SettingOutlined />} 
+                    <Button icon={<SettingOutlined />}
                         onClick={() => {
                             setVisible(true)
                             setConfigKey(parentKey)
                         }}
                         type="text" />
-                        {record.key == configKey && 
+                        {record.key == configKey &&
                         <ModalConfiguration1
                         visible={visible}
                         setVisible={setVisible}
@@ -413,7 +407,6 @@ export const useColumns = ({
 
     const [editBL, setEditBL] = useState(false)
     const renderBacLuong = (text, record) => {
-        const editable = isEditing(record)
         const [parentKey, childKey] = record.key.split('.')
         if (record.index === 'add')
             return {
@@ -510,7 +503,6 @@ export const useColumns = ({
     const [hoverLcb, setHoverLcb] = useState(false)
     const renderLcbPercent = (text, record) => {
         if (record.index === 'add') return null
-        const editable = isEditing(record)
         const [parentKey, childKey] = record.key.split('.')
         if (!childKey) {
             return `${text}`
@@ -712,7 +704,6 @@ export const useColumns = ({
     const [editPC, setEditPC] = useState(false)
     const [editUnitPC, setEditUnitPC] = useState(false)
     const renderPhuCapUnit = (text, record, index, colPos) => {
-        const editable = isEditing(record)
         const [parentKey, childKey] = record.key.split('.')
         if (record.index === 'add') return null
 

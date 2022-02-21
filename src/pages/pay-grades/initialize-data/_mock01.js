@@ -270,7 +270,7 @@ export const data = [
                 ghiChu: ''
             }
         ]
-    },
+    }
 ]
 
 export const pcCols = [

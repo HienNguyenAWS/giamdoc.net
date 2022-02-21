@@ -1,8 +1,8 @@
 import { Button, Select, Table } from 'antd'
 import { data as _initialData, pcCols as _pcCols } from 'pages/pay-grades/initialize-data/_mock01'
-import { filterData, initialSalary as _initialSalary, applyForData as _applyForData  } from 'pages/pay-grades/initialize-data/_masterData'
+import { filterData, initialSalary as _initialSalary, applyForData as _applyForData } from 'pages/pay-grades/initialize-data/_masterData'
 import 'pages/pay-grades/PayGrades.scss'
-import React, { useEffect, useRef, useState, useCallback } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { generateNewChild, generateNewNL } from 'utils/PayGradesHelper'
 import { useColumns } from './useColumns'
 

@@ -1,15 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Checkbox, Divider, Form, Input, Radio, Button } from 'antd'
-import clsx from 'clsx'
-import { C } from 'styled-icons/simple-icons'
-import { data } from 'pages/pay-grades/initialize-data/_mock01'
-import { applyForData as _applyForData  } from 'pages/pay-grades/initialize-data/_masterData'
-const CheckboxGroup = Checkbox.Group
+import { Divider, Form, Input, Radio, Button } from 'antd'
 
-const plainOptions = ['Giám đốc', 'Trợ lý giám đốc', 'Quản lý điều hành', 'Nhân viên']
-const defaultCheckedList = ['Giám đốc']
-
-const NBL01 = ({ recordInfo, setData, save, setVisible, cancel, luongKhoiDiem, setLuongKhoiDiem, initialSalary, setInitialSalary, applyForData }) => {
+const NBL01 = ({ recordInfo, setData, save, setVisible, cancel, setLuongKhoiDiem, initialSalary, setInitialSalary }) => {
     const [initialSalary1, setInitialSalary1] = useState(initialSalary[0].value)
     const [initialSalary2, setInitialSalary2] = useState(initialSalary[1].value)
     const [coefficient, setCoefficient] = useState(recordInfo.heSo[0])
@@ -18,14 +10,13 @@ const NBL01 = ({ recordInfo, setData, save, setVisible, cancel, luongKhoiDiem, s
     const [lcb, setLcb] = useState(70)
     const [kpi, setKpi] = useState(30)
     const [allowance, setAllowance] = useState(40)
-    const [applyFor, setApplyFor] = useState(defaultCheckedList)
-    const [note, setNote] = useState('Note')
+    // const [applyFor, setApplyFor] = useState(defaultCheckedList)
+    // const [note, setNote] = useState('Note')
     const [status, setStatus] = useState(1)
-    const [indeterminate, setIndeterminate] = React.useState(true)
-    const [checkAll, setCheckAll] = React.useState(false)
+    // const [indeterminate, setIndeterminate] = React.useState(true)
+    // const [checkAll, setCheckAll] = React.useState(false)
 
     const [form] = Form.useForm()
-    const { TextArea } = Input
     const inputCoefficientErrorRef = useRef(null)
     const inputJumpErrorRef = useRef(null)
     const errorCoefficientRef = useRef(null)
@@ -65,6 +56,7 @@ const NBL01 = ({ recordInfo, setData, save, setVisible, cancel, luongKhoiDiem, s
                 inputCoefficientErrorRef.current.classList.remove('input__error')
             }
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [coefficient, coefficientFlg])
 
     const onChangeJump = (e) => {
@@ -93,6 +85,7 @@ const NBL01 = ({ recordInfo, setData, save, setVisible, cancel, luongKhoiDiem, s
                 inputCoefficientErrorRef.current.classList.remove('input__error')
             }
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [jump, coefficientFlg])
 
     const onChangeCoefficientFlg = (e) => {
@@ -111,25 +104,25 @@ const NBL01 = ({ recordInfo, setData, save, setVisible, cancel, luongKhoiDiem, s
         setAllowance(e.target.value)
     }
 
-    const onChangeNote = (e) => {
-        setNote(e.target.value)
-    }
+    // const onChangeNote = (e) => {
+    //     setNote(e.target.value)
+    // }
 
     const onChangeStatus = (e) => {
         setStatus(e.target.value)
     }
 
-    const onChangeApplyFor = (list) => {
-        setApplyFor(list)
-        setIndeterminate(!!list.length && list.length < applyForData.length)
-        setCheckAll(list.length === applyForData.length)
-    }
+    // const onChangeApplyFor = (list) => {
+    //     setApplyFor(list)
+    //     setIndeterminate(!!list.length && list.length < applyForData.length)
+    //     setCheckAll(list.length === applyForData.length)
+    // }
 
-    const onCheckAllApplyFor = (e) => {
-        setApplyFor(e.target.checked ? plainOptions : [])
-        setIndeterminate(false)
-        setCheckAll(e.target.checked)
-    }
+    // const onCheckAllApplyFor = (e) => {
+    //     setApplyFor(e.target.checked ? plainOptions : [])
+    //     setIndeterminate(false)
+    //     setCheckAll(e.target.checked)
+    // }
 
     const onFinish = () => {
         console.log(recordInfo)

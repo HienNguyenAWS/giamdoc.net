@@ -207,7 +207,7 @@ const PayGrades01 = () => {
         toUp,
         initialSalary,
         setInitialSalary,
-        setLuongKhoiDiem,
+        setLuongKhoiDiem
     })
     useEffect(() => {
         if (listCellNeedUpdate.current) {

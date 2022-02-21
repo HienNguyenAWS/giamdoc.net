@@ -46,8 +46,6 @@ export const useColumns = ({
 }) => {
     const [visible, setVisible] = useState(false)
 
-    const [configKey, setConfigKey] = useState(null)
-
     const [keyEdit, setKeyEdit] = useState(0)
     const [hoverNL, setHoverNL] = useState(false)
     const [editNL, setEditNL] = useState(false)
@@ -525,6 +523,10 @@ export const useColumns = ({
     const renderBacLuong = (text, record) => {
         const [parentKey, childKey] = record.key.split('.')
         const obj = { children: record.bacLuong, props: {} }
+        if (record.index === 'add')
+            return {
+                children: null
+            }
         if (!childKey && !editBL && !addMode) {
             return (
                 <>

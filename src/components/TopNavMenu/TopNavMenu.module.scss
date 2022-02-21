@@ -1,0 +1,14 @@
+.menu {
+	display: inline-flex;
+	margin-left: 35px;
+	cursor: pointer;
+
+	.menu-hover {
+		color: rgba(50, 161, 200, 0.8);
+	}
+}
+
+.icon {
+	margin-right: 6.25px;
+	cursor: pointer;
+}

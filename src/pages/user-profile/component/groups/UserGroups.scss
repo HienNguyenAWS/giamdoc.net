@@ -1,0 +1,92 @@
+@import '../../../../styles/variables.scss';
+
+.new-group {
+  background: #FFFFFF;
+  box-shadow: 0px 5px 15px rgba(78, 89, 111, 0.05);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  padding: 11px 15px;
+
+  & .title-event {
+    font-size: 14px;
+    line-height: 19px;
+    display: flex;
+    align-items: center;
+    color: #414346;
+    margin-bottom: 7px;
+  }
+
+  & .group-you {
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 18px;
+    display: flex;
+    align-items: center;
+    color: #262B32;
+  }
+
+  & .btn-add-group-work {
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 18px;
+    height: 36px;
+    border: 0px solid;
+    width: fit-content;
+    background-color: #fd830e !important;
+    box-shadow: 0 5px 0 0 #e47204;
+  }
+}
+
+.user-groups {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+
+
+  & .user-group {
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px 20px;
+
+    & .header-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      & h4 {
+        color: $dark-blue;
+        font-size: $font-size-h6;
+        margin-bottom: 10px;
+      }
+    }
+
+
+    & .description {
+      font-size: 1.2em;
+      margin-bottom: 5px;
+    }
+
+    & .user-avatar-wrapper {
+      display: flex;
+      align-items: center;
+
+      & .users-avatar {
+        display: flex;
+
+        & .ant-avatar-circle {
+          margin-left: -15px !important;
+        }
+      }
+
+      &>p {
+        margin-bottom: 0;
+        margin-left: 10px;
+        color: #B5B5B5;
+      }
+    }
+
+
+  }
+}

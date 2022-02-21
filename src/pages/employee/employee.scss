@@ -1,0 +1,55 @@
+#employee-register-form {
+    .main-form {
+        background: #fff;
+        margin-bottom: 15px;
+        padding: 10px;
+        margin-right: 15px;
+    }
+    .right-sidebar {
+        background: #fff;
+        clear: both;
+        margin-bottom: 20px;
+    }
+    .widget-title {
+        .ant-form-item-label {
+            background: none;
+            border-bottom: 1px solid #eee;
+            cursor: move;
+            height: 35px;
+            overflow: hidden;
+            padding: 0 5px;
+            &>label {
+                height: 35px;
+                line-height: 35px;
+                float: left;
+                font-size: 14px;
+                font-weight: 700;
+                margin: 0;
+                overflow: hidden;
+            }
+        }
+        .ant-form-item-control {
+            border-radius: 0 0 3px 3px;
+            padding: 15px;
+        }
+    }
+    
+}
+
+.add-employee-btn {
+    padding: 8px 16px;
+    margin: 0 !important;
+    border: 1px dashed rgba(39, 39, 39, 0.3);
+    outline: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #272727;
+    background-color: #fff;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    border-left: 4px solid #2fce00;
+    &:hover {
+        background-color: #f1efef;
+    }
+}

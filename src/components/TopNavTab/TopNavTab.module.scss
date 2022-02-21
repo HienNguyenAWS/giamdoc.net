@@ -1,0 +1,21 @@
+.tab {
+	display: inline-flex;
+	&:not(:first-child) {
+		margin-left: 35px;
+	}
+	cursor: pointer;
+
+	.tab-active,
+	.tab-hover {
+		color: rgba(50, 161, 200, 0.8);
+	}
+
+	a {
+		color: inherit;
+	}
+}
+
+.icon {
+	margin-right: 6.25px;
+	cursor: pointer;
+}

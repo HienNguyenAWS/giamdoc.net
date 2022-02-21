@@ -1,0 +1,7 @@
+$desktop-lg-width: 1440px;
+
+@mixin lg-down {
+  @media (max-width: #{$desktop-lg-width - 1px}) {
+    @content;
+  }
+}

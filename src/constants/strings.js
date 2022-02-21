@@ -1,0 +1,1 @@
+export const PROCESS_SUCCESS = 'PROCESS_SUCCESS'

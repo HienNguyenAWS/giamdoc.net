@@ -1,0 +1,132 @@
+@import "../../../../styles/variables.scss";
+
+.new-post-container {
+  background-color: #fff;
+  width: 100%;
+  border-radius: 6px;
+  min-height: 55px;
+  margin-bottom: 20px;
+  // box-shadow: 0.1px 0.1px 4px rgb(216, 216, 216);
+  box-shadow: 0px 4px 6px rgba(62, 73, 84, 0.04);
+  .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input)
+  .ant-select-selector {
+  box-shadow: none;
+}
+
+& .post-header {
+
+  display: flex;
+  align-items: flex-start;
+
+  & .name-wrapper {
+    & h4 {
+      font-size: 14px;
+      font-weight: bold;
+      color: #292d32;
+      margin-bottom: 0;
+    }
+
+    & .ant-select-selector {
+      margin-left: 0;
+    }
+  }
+
+  & h4 {
+    font-size: $font-size-base;
+    color: #0956a3;
+    margin-top: -2px;
+    margin-right: 5px;
+  }
+
+  & span {
+    margin-bottom: 0;
+    font-size: 14px;
+    // color: #414346;
+    font-weight: 400;
+    margin-left: 5px;
+  }
+
+  & .post-status {
+    & .ant-select-selector {
+      border: none;
+      padding: 0;
+    }
+
+    & .ant-select-arrow {
+      color: #414346;
+    }
+
+    & .ant-select-selection-item {
+      margin-left: 0;
+    }
+  }
+}
+  .avatar-user {
+    margin-right: 10px;
+  }
+
+  .user-name {
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    color: #292D32;
+    padding: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .item-privacy {
+    img {
+      height: 12px;
+      width: 12px;
+    }
+
+    .label-privacy {
+      margin-right: 6px;
+      font-size: 12px;
+      color: #414346d9;
+    }
+  }
+
+  .type-post-wrapper {
+    
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-end !important;
+    height: 45px;
+
+    .type-post-tab {
+      font-weight: bold;
+      font-size: 14px;
+      color: rgba(65, 67, 70, 0.6);
+      margin-bottom: 0;
+      cursor: pointer;
+      display: flex;
+      justify-content: flex-end !important;
+      align-items: center;
+      &:hover,
+      &.selected {
+        color: #ffffff;
+        // border-bottom: 2px solid #0498c1;
+        // border-left: 1px solid #0498c1;
+        // border-right: 1px solid #0498c1;
+        background-color: #0498c1;
+
+        img {
+          filter: brightness(8);
+        }
+      }
+
+      &:first-child {
+        border-left: none;
+      }
+
+      &:last-child {
+        border-right: none;
+      }
+
+      .type-post-img {
+        //
+      }
+    }
+  }
+}

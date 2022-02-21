@@ -1,0 +1,58 @@
+@import "../../../../styles/variables.scss";
+
+.edit-profile-container {
+
+  & .edit-profile-header {
+    background-color: #fff;
+    height: fit-content;
+    border-right: 1px solid rgba(65, 67, 70, 0.1);
+    & h4 {
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 20px;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      letter-spacing: -0.24px;
+      color: #0498c1;
+      margin-bottom: 16px;
+      margin-left: 16px;
+      margin-top: 16px;
+    }
+
+    & p {
+      border-top: 1px solid rgba(65, 67, 70, 0.1);
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 19px;
+      display: flex;
+      align-items: flex-end;
+      color: #414346;
+      padding: 16px 5px;
+      padding-left: 16px;
+      border-radius: 8px;
+      margin-bottom: 0px;
+      &:hover {
+        cursor: pointer;
+      }
+      &.active {
+        // background: #efefef;
+        color: #32A1C8;
+        font-weight: 600;
+      }
+    }
+    p:hover {
+      // background: #efefef;
+      color: #32A1C8;
+      
+    }
+  }
+
+  & .edit-profile-content {
+    background-color: #fff;
+    // border-radius: 10px;
+    padding: 16px 16px;
+    height: fit-content;
+  }
+}

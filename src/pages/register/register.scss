@@ -1,0 +1,14 @@
+.email-wrapper{
+    & .title{
+        color: #414346;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    & .error{
+        margin-top: 10px;
+        color: red;
+        font-size: 14px;
+        font-weight: bold;
+    }
+}

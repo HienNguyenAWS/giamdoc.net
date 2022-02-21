@@ -1,0 +1,86 @@
+@mixin d-flex {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.topnav {
+	padding: 15px 8px;
+	margin-bottom: 3px;
+	width: 100%;
+	background-color: #FFFFFF;
+	overflow: hidden;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+
+	.top {
+		margin-bottom: 24px;
+		@include d-flex;
+
+		.title {
+			margin: 0;
+			font-weight: 400;
+			font-size: 20px;
+			line-height: 23px;
+		}
+
+		ul.menus {
+			display: flex;
+		}
+
+		li.menu-item {
+			list-style-type: none;
+			&:not(:last-child) {
+				padding-right: 35px;
+			}
+			cursor: pointer;
+			display: flex;
+
+			:hover {
+				color: rgba(50, 161, 200, 0.8);
+			}
+
+			svg {
+				margin-right: 6.25px;
+			}
+		}
+
+		.actions {
+			margin-left: 35px;
+			cursor: pointer;
+		}
+	}
+
+	.bottom {
+
+		display: flex;
+    	justify-content: space-between;
+    	align-items: center;
+
+		ul.tabs {
+			display: table;
+			margin-left: -40px;
+			width: 100%;
+		}
+
+		li.tab-item {
+			list-style-type: none;
+			cursor: pointer;
+			&:not(:last-child) {
+				padding-right: 25px;
+			}
+			display: table-cell;
+
+			svg {
+				margin-right: 6.25px;
+				margin-bottom: -7px;
+			}
+
+			:hover, :focus {
+				color: rgba(50, 161, 200, 0.8);
+			}
+		}
+	}
+}

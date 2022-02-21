@@ -1,0 +1,20 @@
+.business-category {
+	width: 233px;
+	background-color: #f3f4f6;
+
+	& .business-category-title {
+		height: 40px;
+		margin-bottom: 18px;
+
+		color: #fff;
+		background-color: #32a1c8;
+		font-weight: 700;
+		font-size: 20px;
+		line-height: 40px;
+		text-align: center;
+	}
+
+	& .business-category-content {
+		padding: 0 25px;
+	}
+}

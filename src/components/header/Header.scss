@@ -1,0 +1,322 @@
+@import "../../styles/variables.scss";
+
+header {
+  // padding: 25px 20px;
+  // background: #ffffff;
+  box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.25);
+
+  @media (max-width: 576px) {
+    padding: 10px 5px;
+    background-color: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    width: 100%;
+  }
+  .header-wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    @media (max-width: 784px) {
+      justify-content: space-around;
+    }
+    .header-menu {
+      margin-left: 75px;
+      @media (max-width: 1366px) {
+        margin-left: 40px;
+      }
+      @media (max-width: 1176px) {
+        margin-left: 10px;
+      }
+
+      @media (max-width: 768px) {
+        margin: 20px 20px 0;
+      }
+      ul {
+        list-style-type: none;
+        padding: 0;
+        margin-bottom: 0;
+        display: flex;
+        align-items: center;
+        li {
+          padding: 0.4rem 1.2rem;
+          font-size: 18px;
+          @media (max-width: 1024px) {
+            padding: 0.4rem 0.8rem;
+          }
+          a {
+            color: $text-grey;
+          }
+
+          &:hover {
+            a {
+              color: $black;
+            }
+          }
+        }
+        li + li {
+          margin-left: 20px;
+          @media (max-width: 1176px) {
+            margin-left: 10px;
+          }
+        }
+      }
+    }
+
+    .header-action {
+      margin-left: auto;
+      display: flex;
+      @media (max-width: 991px) {
+        margin-top: 20px;
+      }
+      .button {
+        box-shadow: 0px 2px 10px rgba(2, 47, 150, 0.1);
+        border-radius: 50px;
+        text-align: center;
+        font-size: 18px;
+        color: #ffffff;
+        padding: 5px 30px;
+        height: auto;
+        &.btn-start {
+          background: #57b7eb;
+        }
+        &.btn-login {
+          background: $dark-blue;
+          margin-left: 25px;
+          padding: 8px 30px;
+        }
+      }
+      .btn-language {
+        display: inline-flex;
+        align-items: center;
+        margin-left: 25px;
+        cursor: pointer;
+        img {
+          margin-right: 10px;
+        }
+        span {
+          font-size: 18px;
+          color: $text-grey;
+          position: relative;
+          top: 2px;
+          text-transform: uppercase;
+        }
+      }
+      .header-user {
+        margin-left: 30px;
+        cursor: pointer;
+        .user-wrapper {
+          display: flex;
+          align-items: center;
+          .user-avatar {
+            margin-right: 10px;
+
+            img {
+              border-radius: 50%;
+              width: 40px;
+              height: 40px;
+            }
+          }
+          .user-name {
+            color: $dark-blue;
+            font-size: 18px;
+            span {
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: inline-block;
+              max-width: 150px;
+              position: relative;
+              top: 4px;
+            }
+            .anticon-caret-down {
+              color: $text-grey;
+              position: relative;
+              top: 2px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .header-wrapper-mobile {
+    align-items: center;
+    justify-content: space-between;
+    .header-three-line {
+      background: #00dfff;
+      border-radius: 5px;
+      padding: 3px 8px;
+      height: 100%;
+      cursor: pointer;
+      img {
+        width: 18px;
+        height: 18px;
+      }
+    }
+    .logo-mobile {
+      margin-left: 45px;
+      h1 {
+        color: #ffffff;
+        font-weight: bold;
+        font-size: 27px;
+        margin-bottom: 0;
+      }
+    }
+
+    .header-action-mobile {
+      display: flex;
+      align-items: center;
+      position: relative;
+      right: -3px;
+      .button {
+        background-color: transparent;
+        color: #ffffff;
+        font-weight: 500;
+      }
+    }
+  }
+  &.login {
+    .header-user {
+      @media (max-width: 1280px) {
+        margin-left: 10px !important;
+      }
+      .user-wrapper {
+        .user-name {
+          span {
+            @media (max-width: 1280px) {
+              max-width: 100px !important;
+            }
+          }
+        }
+      }
+    }
+    .header-menu {
+      ul {
+        li + li {
+          @media (max-width: 1024px) {
+            margin-left: 0;
+          }
+        }
+      }
+    }
+    .btn-language {
+      margin-left: 25px;
+      @media (max-width: 1176px) {
+        margin-left: 10px !important;
+      }
+      span {
+        text-transform: uppercase;
+      }
+    }
+  }
+}
+
+.menu-drawer {
+  .header-drawer {
+    svg {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      border: 1.5px solid #7b7f86;
+      cursor: pointer;
+    }
+    img {
+      margin-left: 40px;
+    }
+  }
+  .user-drawer {
+    margin-bottom: 20px;
+    .user-wrapper {
+      display: flex;
+      align-items: center;
+      .user-avatar {
+        margin-right: 10px;
+        width: 40px;
+        height: 40px;
+        img {
+          border-radius: 50%;
+        }
+      }
+      .user-name {
+        color: $dark-blue;
+        font-size: 18px;
+        span {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: inline-block;
+          max-width: 150px;
+          position: relative;
+          top: 4px;
+        }
+        .anticon-caret-down {
+          color: $text-grey;
+          position: relative;
+          top: 2px;
+        }
+      }
+    }
+  }
+  .ant-list-items {
+    .ant-list-item {
+      cursor: pointer;
+      border-bottom: 0;
+      transition: 0.2s all;
+      padding: 0;
+      a {
+        padding: 12px 0;
+        padding-left: 10px;
+        width: 100%;
+        color: $text-grey;
+        font-size: 16px;
+      }
+      &:hover,
+      &:focus {
+        background: #00dfff;
+        a {
+          color: #fff;
+        }
+      }
+      &.active {
+        background: #00dfff;
+        a {
+          color: #fff;
+        }
+      }
+    }
+  }
+  .ant-divider {
+    margin-bottom: 20px;
+  }
+  .btn-logout {
+    padding: 10px 2px;
+    color: $text-grey;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+}
+
+.logoutIconCustom {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #b2b2b2;
+  margin-right: 8px;
+  img{
+    width: 32px;
+    height: 32px;
+    padding: 8px 6px 8px 10px;
+    object-fit: contain;
+  }
+}
+
+.logoutIconCustom--wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}

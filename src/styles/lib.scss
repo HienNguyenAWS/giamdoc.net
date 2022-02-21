@@ -1,0 +1,139 @@
+.d-flex {
+    display: flex;
+}
+.item-center {
+    align-items: center;
+}
+.space-between {
+    justify-content: space-between;
+}
+.flex-end {
+    justify-content: flex-end;
+}
+.justify-center {
+    justify-content: center;
+}
+.align-items-baseline {
+    align-items: baseline;
+}
+.direction-column {
+    flex-direction: column;
+}
+.width100 {
+    width: 100%;
+}
+.width50 {
+    width: 50%;
+}
+.maxwidth100 {
+    max-width: 100%;
+}
+.text-center {
+    text-align: center;
+}
+.cursor-pointer {
+    cursor: pointer;
+}
+.c-p {
+    cursor: pointer;
+}
+.mg-0 {
+    margin: 0 !important;
+}
+.pg-0 {
+    padding: 0 !important;
+}
+.pt-0 {
+    padding-top: 0px !important;
+}
+.b--700 {
+    font-weight: 700 !important;
+}
+.b--600 {
+    font-weight: 600 !important;
+}
+.b--500 {
+    font-weight: 500 !important;
+}
+.b--400 {
+    font-weight: normal !important;
+}
+.b--300 {
+    font-weight: 300 !important;
+}
+.float-right {
+    float: right;
+}
+
+.text-one-inline {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.break-word {
+    display: inline-block;
+    word-break: break-word;
+}
+.break-word-1-row {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* number of lines to show */
+    -webkit-box-orient: vertical;
+}
+.break-word-2-row {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* number of lines to show */
+    -webkit-box-orient: vertical;
+}
+.rotate180degree {
+    -webkit-transform: rotateX(180deg);
+    transform: rotateX(180deg);
+}
+
+.flex-grow-1 {
+    flex-grow: 1;
+}
+
+.white-space-pre-line {
+    white-space: pre-line;
+}
+
+.column {
+    @extend .d-flex, .direction-column;
+}
+
+.columnx-center {
+    @extend .d-flex, .direction-column, .item-center;
+}
+
+.columny-center {
+    @extend .d-flex, .direction-column, .justify-center;
+}
+
+.row {
+    @extend .d-flex;
+}
+
+.rowx-center {
+    @extend .d-flex, .justify-center;
+}
+
+.rowy-center {
+    @extend .d-flex, .item-center;
+}
+
+.row-center {
+    @extend .d-flex, .justify-center, .item-center;
+}
+.row-sb {
+    @extend .d-flex, .space-between;
+}
+.row-sb-center {
+    @extend .d-flex, .space-between, .item-center;
+}
+.row-end {
+    @extend .d-flex, .flex-end;
+}

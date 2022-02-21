@@ -1,0 +1,46 @@
+@mixin d-flex {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.topnav {
+	padding: 19px 8px 18px 12px;
+	margin-bottom: 9px;
+	width: 100%;
+	background-color: #f3f4f6;
+	overflow: hidden;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+
+	.top {
+		margin-bottom: 24px;
+		@include d-flex;
+
+		.title {
+			margin: 0;
+			font-weight: 400;
+			font-size: 20px;
+			line-height: 23px;
+		}
+
+		.menu {
+			display: flex;
+		}
+
+		.actions {
+			margin-left: 35px;
+			cursor: pointer;
+		}
+	}
+
+	.bottom {
+		@include d-flex;
+
+		.tabs {
+			display: flex;
+		}
+	}
+}

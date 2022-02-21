@@ -15,11 +15,11 @@ const ModalConfiguration = ({ visible, setVisible, title, onCancel, recordInfo, 
             footer={null}
         >
             <NBL02 recordInfo={recordInfo} setData={setData} save={save} setVisible={setVisible} cancel={cancel}
-            luongKhoiDiem={luongKhoiDiem}
-            setLuongKhoiDiem={setLuongKhoiDiem}
-            initialSalary={initialSalary}
-            setInitialSalary={setInitialSalary}
-            applyForData={applyForData} />
+                luongKhoiDiem={luongKhoiDiem}
+                setLuongKhoiDiem={setLuongKhoiDiem}
+                initialSalary={initialSalary}
+                setInitialSalary={setInitialSalary}
+                applyForData={applyForData} />
         </Modal>
     )
 }

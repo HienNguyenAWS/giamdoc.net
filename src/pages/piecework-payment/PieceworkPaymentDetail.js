@@ -1,17 +1,9 @@
-import { Button, Select, Table } from 'antd'
-import { data as _initialData, filterData, pcCols as _pcCols } from 'pages/pay-grades/initialize-data/_mock01'
-import 'pages/pay-grades/PayGrades.scss'
-import React, { useEffect, useRef, useState, useCallback } from 'react'
-import { generateNewChild, generateNewNL } from 'utils/PayGradesHelper'
+import { Button, Table } from 'antd'
+import { data as _initialData, pcCols as _pcCols, titleCols as _titleCols } from 'pages/piecework-payment/initialize-data/_mock'
+import 'pages/piecework-payment/PieceworkPayment.scss'
+import React, { useEffect, useRef, useState } from 'react'
+import { generateNewChild, generateNewPW } from 'utils/PieceworkHelper'
 import { useColumns } from './useColumns'
-import {
-    STARTING_SALARY_ONE_TITLE,
-    STARTING_SALARY_ONE_VALUE,
-    STARTING_SALARY_TWO_TITLE,
-    STARTING_SALARY_TWO_VALUE
-} from 'constants/constants'
-
-const { Option } = Select
 
 const getCloneData = data =>
     data.map((r, parentIdx) => ({
@@ -29,15 +21,9 @@ const transformData = d => {
 }
 const initialData = transformData(_initialData)
 
-const PayGrades01 = () => {
-    // const [currentTab, setCurrentTab] = useState('ngach-bac-luong');
-    // const handleClickTab = (e) => {
-    //     setCurrentTab(e.key);
-    // };
-
+const PieceworkPaymentDetail = () => {
     const [expandedKeys, setExpandedKeys] = useState(initialData.map(e => e.key))
     const [editingKey, setEditingKey] = useState('')
-    const [luongKhoiDiem, setLuongKhoiDiem] = useState(4_500_000)
     const [data, setData] = useState(initialData)
     const [pcCols, setPcCols] = useState(_pcCols)
     const countPcCols = useRef(1)
@@ -46,7 +32,7 @@ const PayGrades01 = () => {
     const [hoverKey, setHoverKey] = useState(null)
     const listCellNeedUpdate = useRef([])
     const [addMode, setAddMode] = useState(false)
-    const [filterSection, setFilterSection] = useState(filterData)
+    const [titleCols, setTitleCols] = useState(_titleCols)
 
     const setDataValue = (path, value) => {
         const [parentKey, parentDataIdx, childKey, childDataIdx] = path.split('.')
@@ -69,13 +55,6 @@ const PayGrades01 = () => {
 
     const isEditing = record => !!(record.key === editingKey || record.key.startsWith(`${editingKey}.`))
     const isEditMode = !!editingKey
-    const isHeSoAvgRow = record => {
-        // console.log(record)
-        const [parentKey, childKey] = record.key.split('.')
-        // console.log(parentKey)
-        // console.log(data[parentKey - 1].heSo[0])
-        return !!childKey && parseFloat(record.heSo) === parseFloat(data[parentKey - 1].heSo[0])
-    }
     const edit = record => {
         setEditingKey(record.key)
         if (!expandedKeys.includes(record.key)) toggleExpandedKeys(record.key)
@@ -114,14 +93,10 @@ const PayGrades01 = () => {
     }
 
     const onClickAddNewNL = () => {
-        const newNL = generateNewNL(data)
+        const newNL = generateNewPW(data)
         edit(newNL)
         setData(getCloneData([...data, newNL]))
         setAddMode(true)
-        setFilterSection([...filterSection, {
-            value: newNL.key,
-            label: newNL.ngachLuong
-        }])
     }
 
     const onClickAddChild = parentKey => {
@@ -132,26 +107,20 @@ const PayGrades01 = () => {
             key: `${parentKey}.${currentLength + 1}`,
             index: 'add'
         })
-        if (currentLength % 2 === 1) {
-            const avg = parseFloat(data[parentKey - 1].heSo[0])
-            const jump = parseFloat(data[parentKey - 1].heSo[1])
-            setDataValue(`${parentKey}.heSo`, [parseFloat(avg + jump).toFixed(1), jump])
-        }
     }
 
     const onClickDeleteChild = record => {
         const [parentKey] = record.key.split('.')
-        const siblingsLength = data[parentKey - 1].children.length
         let newChildren = data[parentKey - 1].children.filter(c => c.key !== record.key)
         newChildren = newChildren.map((c, idx) => {
             return { ...c, key: `${parentKey}.${idx + 1}` }
         })
         setDataValue(`${parentKey}.children`, newChildren)
-        if ((siblingsLength - 8) % 2 === 0) {
-            const avg = parseFloat(data[parentKey - 1].heSo[0])
-            const jump = parseFloat(data[parentKey - 1].heSo[1])
-            setDataValue(`${parentKey}.heSo`, [avg - jump, jump])
-        }
+        // if ((siblingsLength - 8) % 2 === 0) {
+        //     const avg = parseFloat(data[parentKey - 1].heSo[0])
+        //     const jump = parseFloat(data[parentKey - 1].heSo[1])
+        //     setDataValue(`${parentKey}.heSo`, [avg - jump, jump])
+        // }
     }
 
     const deleteSection = record => {
@@ -166,19 +135,19 @@ const PayGrades01 = () => {
         setData(data.map(e => ({ ...e, [`phuCapUnit${nextKey}`]: '%', [`phuCapValue${nextKey}`]: 'PC' })))
     }
 
-    const updatePcColTitle = (key, val) => {
-        setPcCols(pcCols.map(e => (e.key === key ? { ...e, title: val } : e)))
+    const updateTitleCol = (key, val) => {
+        setTitleCols(titleCols.map(e => (e.key === key ? { ...e, title: val } : e)))
     }
 
     const deletePcCol = key => {
-        setPcCols(pcCols.filter(e => e.key !== key))
+        setTitleCols(pcCols.filter(e => e.key !== key))
     }
     const { columns } = useColumns({
         deletePcCol,
         deleteSection,
         setAddMode,
         addMode,
-        updatePcColTitle,
+        updateTitleCol,
         addNewPcCol,
         pcCols,
         onClickAddChild,
@@ -187,7 +156,6 @@ const PayGrades01 = () => {
         hoverKey,
         listCellNeedUpdate,
         setDataValue,
-        luongKhoiDiem,
         data,
         isEditing,
         expandedKeys,
@@ -195,8 +163,8 @@ const PayGrades01 = () => {
         editingKey,
         edit,
         save,
-        cancel,
-        initialDataRef
+        titleCols,
+        cancel
     })
     useEffect(() => {
         if (listCellNeedUpdate.current) {
@@ -227,7 +195,6 @@ const PayGrades01 = () => {
             })
         }
     }, [addMode])
-
     const getAddId = record => {
         if (record.key === `${data.length}`) {
             return 'addElStart'
@@ -238,52 +205,21 @@ const PayGrades01 = () => {
         return undefined
     }
 
-    const onChangeFilterNgachLuong = (val) => {
-        const filterData = []
-        filterData.push(data.find((_data) => _data.key == val ))
-        // filterData.push(data[1])
-        setData(filterData)
-    }
-
-    console.log(filterSection)
-
     return (
-        <div className='bang-ngach-luong-1'>
-            <div ref={wrapperBoundingRef} className='bang-ngach-luong-1__table'>
+        <div className='piecework-payment'>
+            <div ref={wrapperBoundingRef} className='piecework-payment__table'>
                 <div
                     className='add-overlay'
                     style={{
                         height: addOverlayBounding[0],
-                        visibility: addMode ? 'hidden' : 'hidden'
+                        visibility: addMode ? 'visible' : 'hidden'
                     }}
                 />
-                <div className='table__header'>
-                    <Select
-                        placeholder="Chọn..."
-                        options={filterSection}
-                        onChange={val => {
-                            onChangeFilterNgachLuong(val)
-                        }}
-                    />
-                    <div className='table__header__text'>
-                        <span>Giá trị lương khởi điểm</span>
-                        <Select
-                            bordered={false}
-                            value={luongKhoiDiem}
-                            onChange={val => {
-                                setLuongKhoiDiem(val)
-                            }}
-                        >
-                            <Option value={STARTING_SALARY_ONE_VALUE}>{STARTING_SALARY_ONE_TITLE}</Option>
-                            <Option value={STARTING_SALARY_TWO_VALUE}>{STARTING_SALARY_TWO_TITLE}</Option>
-                        </Select>
-                    </div>
-                </div>
 
                 <Table
                     columns={columns}
                     dataSource={data}
-                    scroll={{ x: 'max-content' }}
+                    scroll={{ x: 'max-content', y: window.innerHeight * 0.6 }}
                     pagination={false}
                     expandable={{
                         expandedRowRender: () => null,
@@ -301,17 +237,16 @@ const PayGrades01 = () => {
                             onMouseLeave: () => {
                                 setHoverKey(null)
                             }, // mouse leave row
-                            style: { fontWeight: isHeSoAvgRow(record) ? 'bold' : 'normal' },
                             id: addMode ? getAddId(record) : undefined
                         }
                     }}
                 />
             </div>
-            <Button className='button-add' onClick={onClickAddNewNL} disabled={isEditMode}>
-                + Thêm ngạch lương
+            <Button className='button-add' onClick={onClickAddNewNL}>
+                + Thêm công đoạn
             </Button>
         </div>
     )
 }
 
-export default PayGrades01
+export default PieceworkPaymentDetail

@@ -1,8 +1,7 @@
 import { Button, Select, Table } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { generateNewNL } from 'utils/PayGrades02Helper'
-import { data as _initialData, pcCols as _pcCols, applyForData as _applyForData } from 'pages/pay-grades/initialize-data/_mock02'
-import { filterData } from 'pages/pay-grades/initialize-data/_mock02'
+import { data as _initialData, pcCols as _pcCols, filterData } from 'pages/pay-grades/initialize-data/_mock02'
 import 'pages/pay-grades/PayGrades.scss'
 import { useColumns } from './useColumns'
 import {
@@ -30,31 +29,24 @@ const transformData = (d) => {
 }
 const initialData = transformData(_initialData)
 
-
 export const PayGrades02 = () => {
     // const [currentTab, setCurrentTab] = useState('ngach-bac-luong')
     // const handleClickTab = (e) => {
     //     setCurrentTab(e.key)
     // }
-    const [coDinhHeSo, setCoDinhHeSo] = useState(false)
+
     const [expandedKeys, setExpandedKeys] = useState(initialData.map((e) => e.key))
     const [editingKey, setEditingKey] = useState('')
     const [luongKhoiDiem, setLuongKhoiDiem] = useState(4_500_000)
     const [data, setData] = useState(initialData)
     const [pcCols, setPcCols] = useState(_pcCols)
-    const [applyForData, setApplyForData] = useState(_applyForData)
     const initialDataRef = useRef(getCloneData(initialData))
     const initialPcColRef = useRef(getCloneCols(_pcCols))
     const [hoverKey, setHoverKey] = useState(null)
     const listCellNeedUpdate = useRef([])
     const [addMode, setAddMode] = useState(false)
     const [filterSection, setFilterSection] = useState(filterData)
-    const [editKpi, setEditKpi] = useState(false)
-    const [hoverNL, setHoverNL] = useState(false)
-    const [editNL, setEditNL] = useState(false)
-    const [editApply, setEditApply] = useState(false)
-    const [keyEdit, setKeyEdit] = useState(0)
-    const [addModeNL, setAddModeNL] = useState(false)
+
     const setDataValue = (path, value) => {
         const [parentKey, parentDataIdx, childKey, childDataIdx] = path.split('.')
         const parentIdx = parseInt(parentKey) - 1
@@ -140,7 +132,6 @@ export const PayGrades02 = () => {
     const onClickAddNewNL = () => {
         const newNL = generateNewNL(data)
         edit(newNL)
-        setAddModeNL(true)
         setData(getCloneData([...data, newNL]))
         setAddMode(true)
         setFilterSection([...filterSection, {
@@ -200,23 +191,7 @@ export const PayGrades02 = () => {
         toUp,
         toDown,
         initialDataRef,
-        getCloneData,
-        coDinhHeSo,
-        setCoDinhHeSo,
-        applyForData,
-        setApplyForData,
-        editKpi,
-        setEditKpi,
-        hoverNL,
-        setHoverNL,
-        editNL,
-        setEditNL,
-        editApply,
-        setEditApply,
-        keyEdit,
-        setKeyEdit,
-        addModeNL,
-        setAddModeNL
+        getCloneData
     })
     useEffect(() => {
         if (listCellNeedUpdate.current) {
@@ -228,7 +203,7 @@ export const PayGrades02 = () => {
     const [addOverlayBounding, setAddOverlayBounding] = useState([])
     const wrapperBoundingRef = useRef(null)
     useEffect(() => {
-        if (addModeNL) {
+        if (addMode) {
             const startBounding = document.querySelector('#addElStart').getBoundingClientRect()
             const endRowBouding = document.querySelector('#addElEnd').getBoundingClientRect()
             const wrapperBouding = wrapperBoundingRef.current.getBoundingClientRect()
@@ -242,7 +217,7 @@ export const PayGrades02 = () => {
                 behavior: 'smooth'
             })
         }
-    }, [addModeNL])
+    }, [addMode])
     const getAddId = record => {
         if (record.key === `${data.length}`) {
             return 'addElStart'
@@ -254,16 +229,13 @@ export const PayGrades02 = () => {
     }
 
     const onChangeFilterNgachLuong = (val) => {
-        // console.log(val)
-        // console.log(data)
         const filterData = []
-        const newData = data.find((_data) => _data.key == val )
-        filterData.push(newData)
-        // // filterData.push(data[1])
-        // console.log(filterData)
-        // setData(filterData)
-        // // console.log(data)
+        filterData.push(data.find((_data) => _data.key == val ))
+        // filterData.push(data[1])
+        setData(filterData)
     }
+
+    console.log(filterSection)
 
     return (
         <div className="bang-ngach-luong-2">
@@ -272,7 +244,7 @@ export const PayGrades02 = () => {
                     className='add-overlay'
                     style={{
                         height: addOverlayBounding[0],
-                        visibility: addMode ? 'visiable' : 'hidden'
+                        visibility: addMode ? 'hidden' : 'hidden'
                     }}
                 />
                 <div className="table__header">
@@ -315,12 +287,12 @@ export const PayGrades02 = () => {
                                 setHoverKey(null)
                             }, // mouse leave row
                             style: { fontWeight: isHeSoAvgRow(record) ? 'bold' : 'normal' },
-                            id: addModeNL ? getAddId(record) : undefined
+                            id: addMode ? getAddId(record) : undefined
                         }
                     }}
                 />
             </div>
-            <Button className="button-add" onClick={onClickAddNewNL}>
+            <Button className="button-add" onClick={onClickAddNewNL} disabled={isEditMode}>
 				+ Thêm ngạch lương
             </Button>
         </div>

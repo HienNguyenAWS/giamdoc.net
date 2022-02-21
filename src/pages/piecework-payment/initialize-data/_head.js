@@ -49,7 +49,7 @@ export const HeadData = {
             label: 'Khoán sản phẩm',
             icon: 'ProductIcon',
             activeIcon: 'ProductActiveIcon'
-        },  
+        },
         {
             id: uuidv4(),
             href: 'dummy',
@@ -61,20 +61,6 @@ export const HeadData = {
             id: uuidv4(),
             href: 'dummy',
             label: 'Khoán dự án / vụ việc',
-            icon: 'WorkIcon',
-            activeIcon: 'WorkActiveIcon'
-        },
-        {
-            id: uuidv4(),
-            href: 'dummy',
-            label: 'Bố trí lao động',
-            icon: 'BonesIcon',
-            activeIcon: 'BonesActiveIcon'
-        },
-        {
-            id: uuidv4(),
-            href: 'dummy',
-            label: 'Hoạch định nhân sự',
             icon: 'WorkIcon',
             activeIcon: 'WorkActiveIcon'
         }

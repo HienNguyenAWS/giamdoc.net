@@ -2,18 +2,19 @@ import React from 'react'
 import { Modal } from 'antd'
 import 'antd/dist/antd.css'
 
-import NBL02 from './ModalForms/NBL02'
+import NBL01 from './ModalForms/NBL01'
 
-const ModalConfiguration = ({ visible, title, onCancel, recordInfo, setData }) => {
+const ModalConfiguration = ({ visible, onCancel, onCreate, title }) => {
 
     return (
         <Modal
             visible={visible}
             title={title}
+            okText="Submit"
             onCancel={onCancel}
-            footer={null}
+            onOk={onCreate}
         >
-            <NBL02 recordInfo={recordInfo} setData={setData} />
+            <NBL01 />
         </Modal>
     )
 }

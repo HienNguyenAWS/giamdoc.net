@@ -10,7 +10,6 @@
     }
 
     & thead > tr > th {
-        padding: 0 8px;
         background-color: #daebf7;
     }
 
@@ -18,18 +17,7 @@
         display: none;
     }
 
-    & tbody > tr > td {
-        padding: 0 8px;
-        height: 24px;
-    }
-
-    & tbody > tr > td:last-child {
-        padding: 0 32px;
-        height: 24px;
-    }
-
     & .flexCenterVertical {
-        width: 100%;
         display: inline-flex;
         align-items: center;
     }
@@ -68,75 +56,4 @@
 .bnl1Popover {
     display: flex;
     flex-flow: column;
-}
-
-.salaryLevel {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: -24px;
-
-    button {
-        width: 24px;
-        height: 24px;
-        margin: 0 !important;
-        margin-right: 4px;
-        padding: 0;
-        border: none;
-        background: inherit;
-        visibility: hidden;
-    }
-
-    svg {
-        margin-left: 2px;
-        visibility: hidden;
-        cursor: pointer;
-    }
-}
-
-.titleTableList {
-    display: flex;
-    align-items: center;
-
-    button {
-        width: 24px;
-        height: 24px;
-        margin: 0 !important;
-        margin-right: 4px;
-        padding: 0;
-        border: none;
-        background: inherit;
-        visibility: hidden;
-    }
-
-    svg {
-        margin-left: 4px;
-    }
-}
-
-.actions {
-    margin-left: 8px;
-    display: inline-flex;
-    flex-direction: column;
-
-    svg {
-        padding: 1px;
-
-        &:hover {
-            background: #fff;
-            cursor: pointer;
-            transition: background 0.6s;
-        }
-    }
-}
-
-.rowDelete {
-    display: flex;
-    align-items: center;
-
-    svg {
-        margin-right: 2px;
-        cursor: pointer;
-        visibility: hidden;
-    }
 }

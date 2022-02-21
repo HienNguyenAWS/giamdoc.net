@@ -182,7 +182,6 @@ export const formatCurrency = (number) => {
 export const generateNewNL = (data) => {
     const newNL = NLDefault[0]
     newNL.key = `${data.length + 1}`
-    newNL.applyFor = []
     newNL.children.forEach((e, idx, arr) => {
         e.key = `${newNL.key}.${idx + 1}`
         e.salaryScale = idx === arr.length - 1 ? 'add' : e.key

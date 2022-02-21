@@ -18,6 +18,7 @@ import ModalConfiguration from 'components/modal-configuration/ModalConfiguratio
 const { Option } = Select
 
 export const useColumns = ({
+    deleteSection,
     addMode,
     updatePcColTitle,
     addNewPcCol,
@@ -142,6 +143,7 @@ export const useColumns = ({
     }
 
     const renderIndex = (text, record) => {
+        const editable = isEditing(record)
         const isChild = record.key.includes('.')
 
         const [childKey] = record.key.split('.')
@@ -157,6 +159,7 @@ export const useColumns = ({
                     <Button
                         icon={<PlusCircleOutlined className='btn--primary' />}
                         type='text'
+                        disabled={!editable}
                         onClick={() => {
                             setDataValue(`${parentKey}.children.${currentLength}`, generateNewChild(siblings))
                             setDataValue(`${parentKey}.children.${currentLength + 1}`, {
@@ -177,13 +180,12 @@ export const useColumns = ({
             )
         } else {
             obj.children = (
-                <div className={clsx({ 'index-child-row ml': !!childKey })}>
-                    {isChild ? (
+                <div className={clsx({ 'index-child-row': !!childKey })}>
+                    {isChild && (
                         // (!isEditMode ||
                         // 	(isEditMode &&
                         // 		data[parentKey - 1].children.length > 8 &&
                         // 		parseInt(childKey) === data[parentKey - 1].children.length - 1)) && (
-                            <>
                         <Popconfirm
                             cancelButtonProps={{ className: 'pop-confirm__btn' }}
                             okButtonProps={{ className: 'pop-confirm__btn' }}
@@ -203,13 +205,15 @@ export const useColumns = ({
                                 }
                             }}
                         >
-                                <CloseOutlined className={clsx('delete-child-btn btn--danger icon--wh10px mr-5px', hoverKey === record.key ? 'visible' : 'hidden')}
-                                />
+                            <Button
+                                className={clsx('delete-child-btn', hoverKey === record.key ? 'visible' : 'hidden')}
+                                icon={<CloseOutlined className='btn--danger' />}
+                                size='small'
+                                type='text'
+                            />
                         </Popconfirm>
-                        <span>
-                    {record.key}</span>
-                    </>
-                    ): <span className='ml-15px'>{record.key}</span>}
+                    )}
+                    {record.key}
                 </div>
             )
         }

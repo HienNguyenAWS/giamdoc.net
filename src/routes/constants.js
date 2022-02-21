@@ -31,7 +31,9 @@ const PAGES = {
     payGradesDetail: '/pay-grades/:id',
     payGradesDetail1: '/pay-grades-01',
     //employees
-    employees: '/employees'
+    employees: '/employees',
+    //piecework
+    pieceworkPayment: '/piecework-payment'
 }
 
 export default PAGES

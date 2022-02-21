@@ -1,6 +1,6 @@
 /* eslint-disable indent */
 import { fromJS } from 'immutable'
-import { ADD_PAYGRADE, DELETE_PAYGRADE } from './PayGrades03.action'
+import { ADD_LEVEL, ADD_PAYGRADE, DELETE_PAYGRADE } from './PayGrades03.action'
 import { v4 as uuidv4 } from 'uuid'
 
 const initialState = fromJS({
@@ -15,11 +15,19 @@ const initialState = fromJS({
         }
     ],
 
-    salary: 4_500_000
+    salary: 4_500_000,
+    level: 5,
+    amplitude: 0.25,
+    coefficient: 1
 })
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
+        case ADD_LEVEL: {
+            const level = state.get('level')
+            return state.set('level', level + 1)
+        }
+
         case ADD_PAYGRADE: {
             const payGrade = { id: uuidv4(), ...action.payload }
             const newPayGrades = state.get('payGrades').toJS()

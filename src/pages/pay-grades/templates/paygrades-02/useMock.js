@@ -6,13 +6,13 @@ import {
     UpOutlined,
     DownOutlined,
     MinusCircleOutlined
-} from '@ant-design/icons'
-import { Button, Select, Space } from 'antd'
-import clsx from 'clsx'
-import React, { useEffect, useState } from 'react'
-import styles from './SalaryGrade2.module.scss'
+} from '@ant-design/icons';
+import { Button, Select, Space } from 'antd';
+import clsx from 'clsx';
+import React, { useEffect, useState } from 'react';
+import styles from './SalaryGrade2.module.scss';
 
-const { Option } = Select
+const { Option } = Select;
 
 const _data = [
     {
@@ -27,7 +27,7 @@ const _data = [
         tong: 'LVT+PC',
         'ghi-chu': ''
     }
-]
+];
 const _columns = (cb, toggleExpandedKeys, expandedKeys) => [
     {
         title: 'Ngach luong',
@@ -126,27 +126,27 @@ const _columns = (cb, toggleExpandedKeys, expandedKeys) => [
         dataIndex: 'ghi-chu',
         align: 'center'
     }
-]
+];
 export const useMock = ({ expandedKeys, toggleExpandedKeys }) => {
-    const [columns, setColumns] = useState([])
-    const [addFlag, setAddFlag] = useState(false)
-    const [deleteIdx, setDeleteIdx] = useState(-1)
-    const [count, setCount] = useState(1)
+    const [columns, setColumns] = useState([]);
+    const [addFlag, setAddFlag] = useState(false);
+    const [deleteIdx, setDeleteIdx] = useState(-1);
+    const [count, setCount] = useState(1);
     const deleteColumn = (idx) => {
-        setDeleteIdx(idx)
-    }
+        setDeleteIdx(idx);
+    };
     useEffect(() => {
 
-        setColumns(_columns(() => setAddFlag(true), toggleExpandedKeys, expandedKeys))
-    }, [expandedKeys, toggleExpandedKeys])
+        setColumns(_columns(() => setAddFlag(true), toggleExpandedKeys, expandedKeys));
+    }, [expandedKeys, toggleExpandedKeys]);
     useEffect(() => {
         if (addFlag) {
             let lastIndex = columns
                 .slice()
                 .reverse()
-                .findIndex((e) => e.dataIndex.includes('phu-cap'))
-            lastIndex = columns.length - lastIndex
-            const newColumns = [...columns]
+                .findIndex((e) => e.dataIndex.includes('phu-cap'));
+            lastIndex = columns.length - lastIndex;
+            const newColumns = [...columns];
             const newColumn = {
                 title: `Phu cap ${count + 1}`,
                 dataIndex: 'phu-cap-01',
@@ -165,8 +165,8 @@ export const useMock = ({ expandedKeys, toggleExpandedKeys }) => {
                         <Button type="text" icon={<PlusCircleOutlined />} size="small" onClick={() => setAddFlag(true)} />
                     </Space>
                 )
-            }
-            newColumns.splice(lastIndex, 0, newColumn)
+            };
+            newColumns.splice(lastIndex, 0, newColumn);
             setColumns(
                 newColumns.map((e, idx) => {
                     if (e.dataIndex.includes('phu-cap') && idx !== lastIndex) {
@@ -185,26 +185,26 @@ export const useMock = ({ expandedKeys, toggleExpandedKeys }) => {
                                     <Button type="text" icon={<MinusCircleOutlined />} size="small" onClick={() => deleteColumn(idx)} />
                                 </Space>
                             )
-                        }
+                        };
                     }
-                    return e
+                    return e;
                 })
-            )
+            );
 
-            setAddFlag(false)
-            setCount(count + 1)
+            setAddFlag(false);
+            setCount(count + 1);
         }
-    }, [addFlag, columns, count])
+    }, [addFlag, columns, count]);
     useEffect(() => {
         if (deleteIdx !== -1) {
-            const newCol = [...columns]
-            newCol.splice(deleteIdx, 1)
-            setColumns(newCol)
-            setDeleteIdx(-1)
+            const newCol = [...columns];
+            newCol.splice(deleteIdx, 1);
+            setColumns(newCol);
+            setDeleteIdx(-1);
         }
-    }, [deleteIdx, columns])
+    }, [deleteIdx, columns]);
     return {
         data: _data,
         columns
-    }
-}
+    };
+};

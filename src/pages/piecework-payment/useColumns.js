@@ -70,7 +70,23 @@ export const useColumns = ({
             title: '1.000.000.000',
             isHovered: false,
             isClicked: false
+        },
+        rules1: {
+            title: 'Quy tắc 1',
+            isHovered: false,
+            isClicked: false
+        },
+        rules2: {
+            title: 'Quy tắc 2',
+            isHovered: false,
+            isClicked: false
+        },
+        rules3: {
+            title: 'Quy tắc 3',
+            isHovered: false,
+            isClicked: false
         }
+
     })
     const titleTableListRef = useRef(JSON.parse(JSON.stringify(titleTableList)))
 
@@ -169,6 +185,7 @@ export const useColumns = ({
                         trigger={editingKey === '' ? 'click' : ''}
                     >
                         <Button icon={<MoreOutlined />} type='text' disabled={editingKey !== '' }
+                        style = {{'margin-left':'-16px'}}
                         className={record.key === 'special' ? 'hidden' : 'visible'} />
                         {record.index}
                     </Popover>
@@ -1286,27 +1303,212 @@ export const useColumns = ({
             className: 'cell--border-right',
             onHeaderCell: () => ({ className: 'thead__title-color' }),
             children: [
-                {
-                    title: 'Quy tắc 1',
+                    {
+                        title: titleTableList.rules1.isClicked ? (
+                            <div className="d-flex flex-row">
+                                <Input
+                                    className="editInput input__inforEdit input--hideArrow txt-right"
+                                    autoFocus
+                                    onFocus={event => event.target.select()}
+                                    value={titleTableList.rules1.title}
+                                    onChange={event => {
+                                        const newTitleTableList = JSON.parse(JSON.stringify(titleTableList))
+                                        newTitleTableList.rules1.title = event.target.value
+                                        setTitleTableList(newTitleTableList)
+                                    }}
+                                />
+                                <div className="d-flex flex-column mr-0 ml-auto">
+                                    <Button
+                                        className="btn__editInstant border-0 btn--wh10px"
+                                        icon={
+                                            <CloseOutlined className="icon--wh10px" style={{ color: '#FF494E80' }}></CloseOutlined>
+                                        }
+                                        onClick={() => {
+                                            handleTitleTableCancel('rules1')
+                                        }}
+                                        size="small"
+                                    ></Button>
+                                    <Button
+                                        className="btn__editInstant border-0 btn--wh10px"
+                                        icon={<CheckOutlined className="icon--wh10px" style={{ color: '#97c27d' }}></CheckOutlined>}
+                                        onClick={() => {
+                                            handleTitleTableSave('rules1')
+                                        }}
+                                        size="small"
+                                    ></Button>
+                                </div>
+                            </div>
+                        ) : (
+                        <div className='title__infor thead__title-color'>
+                            {titleTableList.rules1.title}
+                            <Button className='btn__editTitle' icon={<Pen></Pen>} onClick={() => {
+                                const newTitleTableList = JSON.parse(JSON.stringify(titleTableList))
+                                newTitleTableList.rules1.isClicked = true
+                                setTitleTableList(newTitleTableList)
+                                console.log(456)
+                                }}/>
+                            </div>
+                        ),
+                        onHeaderCell: () => ({
+                            onMouseEnter: () => {
+                                setTitleTableList(preState => {
+                                const newTitleTableList = JSON.parse(JSON.stringify(preState))
+                                newTitleTableList.rules1.isHovered = true
+                                return newTitleTableList
+                                })
+                            },
+                            onMouseLeave: () => {
+                            setTitleTableList(preState => {
+                                const newTitleTableList = JSON.parse(JSON.stringify(preState))
+                                newTitleTableList.rules1.isHovered = false
+                                return newTitleTableList
+                                })
+                            }
+                    }),
                     align: 'left',
                     className: 'cell--border-right',
-                    onHeaderCell: () => ({ className: 'thead__title-color' }),
+                    // onHeaderCell: () => ({ className: 'thead__title-color' }),
                     children: [
-                        {
-                            title: 'Quy tắc 2:',
+                            {
+                                title: titleTableList.rules2.isClicked ? (
+                                    <div className="d-flex flex-row">
+                                        <Input
+                                            className="editInput input__inforEdit input--hideArrow txt-right"
+                                            autoFocus
+                                            onFocus={event => event.target.select()}
+                                            value={titleTableList.rules2.title}
+                                            onChange={event => {
+                                                const newTitleTableList = JSON.parse(JSON.stringify(titleTableList))
+                                                newTitleTableList.rules2.title = event.target.value
+                                                setTitleTableList(newTitleTableList)
+                                            }}
+                                        />
+                                        <div className="d-flex flex-column mr-0 ml-auto">
+                                            <Button
+                                                className="btn__editInstant border-0 btn--wh10px"
+                                                icon={
+                                                    <CloseOutlined className="icon--wh10px" style={{ color: '#FF494E80' }}></CloseOutlined>
+                                                }
+                                                onClick={() => {
+                                                    handleTitleTableCancel('rules2')
+                                                }}
+                                                size="small"
+                                            ></Button>
+                                            <Button
+                                                className="btn__editInstant border-0 btn--wh10px"
+                                                icon={<CheckOutlined className="icon--wh10px" style={{ color: '#97c27d' }}></CheckOutlined>}
+                                                onClick={() => {
+                                                    handleTitleTableSave('rules2')
+                                                }}
+                                                size="small"
+                                            ></Button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                <div className='title__infor thead__title-color'>
+                                    {titleTableList.rules2.title}
+                                    <Button className='btn__editTitle' icon={<Pen></Pen>} onClick={() => {
+                                        const newTitleTableList = JSON.parse(JSON.stringify(titleTableList))
+                                        newTitleTableList.rules2.isClicked = true
+                                        setTitleTableList(newTitleTableList)
+                                        console.log(456)
+                                        }}/>
+                                    </div>
+                                ),
+                                onHeaderCell: () => ({
+                                    onMouseEnter: () => {
+                                        setTitleTableList(preState => {
+                                        const newTitleTableList = JSON.parse(JSON.stringify(preState))
+                                        newTitleTableList.rules2.isHovered = true
+                                        return newTitleTableList
+                                        })
+                                    },
+                                    onMouseLeave: () => {
+                                    setTitleTableList(preState => {
+                                        const newTitleTableList = JSON.parse(JSON.stringify(preState))
+                                        newTitleTableList.rules2.isHovered = false
+                                        return newTitleTableList
+                                        })
+                                    }
+                            }),
                             width: 250,
                             align: 'left',
                             className: 'cell--border-right',
-                            onHeaderCell: () => ({ className: 'thead__title-color' }),
-                            dataIndex: 'ghiChu',
-                            onCell: (_, index) => {
-                                if (index === 0 ) {
-                                  return { rowSpan: 2 }
+                            children:[{
+                                    title: titleTableList.rules3.isClicked ? (
+                                        <div className="d-flex flex-row">
+                                            <Input
+                                                className="editInput input__inforEdit input--hideArrow txt-right"
+                                                autoFocus
+                                                onFocus={event => event.target.select()}
+                                                value={titleTableList.rules3.title}
+                                                onChange={event => {
+                                                    const newTitleTableList = JSON.parse(JSON.stringify(titleTableList))
+                                                    newTitleTableList.rules3.title = event.target.value
+                                                    setTitleTableList(newTitleTableList)
+                                                }}
+                                            />
+                                            <div className="d-flex flex-column mr-0 ml-auto">
+                                                <Button
+                                                    className="btn__editInstant border-0 btn--wh10px"
+                                                    icon={
+                                                        <CloseOutlined className="icon--wh10px" style={{ color: '#FF494E80' }}></CloseOutlined>
+                                                    }
+                                                    onClick={() => {
+                                                        handleTitleTableCancel('rules3')
+                                                    }}
+                                                    size="small"
+                                                ></Button>
+                                                <Button
+                                                    className="btn__editInstant border-0 btn--wh10px"
+                                                    icon={<CheckOutlined className="icon--wh10px" style={{ color: '#97c27d' }}></CheckOutlined>}
+                                                    onClick={() => {
+                                                        handleTitleTableSave('rules3')
+                                                    }}
+                                                    size="small"
+                                                ></Button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                    <div className='title__infor thead__title-color'>
+                                        {titleTableList.rules3.title}
+                                        <Button className='btn__editTitle' icon={<Pen></Pen>} onClick={() => {
+                                            const newTitleTableList = JSON.parse(JSON.stringify(titleTableList))
+                                            newTitleTableList.rules3.isClicked = true
+                                            setTitleTableList(newTitleTableList)
+                                            console.log(456)
+                                            }}/>
+                                        </div>
+                                    ),
+                                    onHeaderCell: () => ({
+                                        onMouseEnter: () => {
+                                            setTitleTableList(preState => {
+                                            const newTitleTableList = JSON.parse(JSON.stringify(preState))
+                                            newTitleTableList.rules3.isHovered = true
+                                            return newTitleTableList
+                                            })
+                                        },
+                                        onMouseLeave: () => {
+                                        setTitleTableList(preState => {
+                                            const newTitleTableList = JSON.parse(JSON.stringify(preState))
+                                            newTitleTableList.rules3.isHovered = false
+                                            return newTitleTableList
+                                            })
+                                        }
+                                }),
+                                width: 250,
+                                align: 'left',
+                                className: 'cell--border-right',
+                                dataIndex: 'ghiChu',
+                                onCell: (_, index) => {
+                                    if (index === 0 ) {
+                                    return { rowSpan: 2 }
+                                    }
+                                    if (index === 1) {
+                                        return { rowSpan: 0 }
+                                    }
                                 }
-                                if (index === 1) {
-                                    return { rowSpan: 0 }
-                                }
-                            }
+                            }]  
                         }
                     ]
                 }

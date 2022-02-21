@@ -1,71 +1,50 @@
-const rowsMock = [
+export const rowsMock = [
     {
         code: 'N1-LCB',
         title: 'Lương cơ bản',
-        rules: 'LKĐ / hoặc LTT',
+        rules: {
+            key: 'lcb'
+        },
         amplitudeAndCoefficient: ''
     },
     {
         code: 'N1-LCB',
         title: 'Lương KPI',
-        rules: 'VD: 30% LCB',
+        rules: {
+            key: 'lkpi'
+        },
         amplitudeAndCoefficient: ''
     },
     {
         code: 'N1-LCB',
         title: 'Lương vị trí (Lương chính)',
-        rules: 'LVT',
+        rules: {
+            key: 'lvt'
+        },
         amplitudeAndCoefficient: ''
     },
     {
         code: 'N1-LCB',
         title: 'Phụ cấp',
-        rules: '',
+        rules: {
+            key: 'pc1'
+        },
         amplitudeAndCoefficient: ''
     }
 ]
 
-const columnsMock = [
-    {
-        label: 'Bậc 1',
-        key: 'level1',
-        value: {
-            amplitude: 0.25,
-            coefficient: 1
+export const salary = {
+    type: 1,
+    list: [
+        {
+            label: '4.500.000',
+            value: 4_500_000
+        },
+        {
+            label: '6.500.000',
+            value: 6_500_000
         }
-    },
-    {
-        label: 'Bậc 2',
-        key: 'level2',
-        value: {
-            amplitude: 0.25,
-            coefficient: 1.25
-        }
-    },
-    {
-        label: 'Bậc 3',
-        key: 'level3',
-        value: {
-            amplitude: 0.25,
-            coefficient: 1.5
-        }
-    },
-    {
-        label: 'Bậc 4',
-        key: 'level4',
-        value: {
-            amplitude: 0.25,
-            coefficient: 1.75
-        }
-    },
-    {
-        label: 'Bậc 5',
-        key: 'level5',
-        value: {
-            amplitude: 0.25,
-            coefficient: 2
-        }
-    }
-]
-
-export { rowsMock, columnsMock }
+    ],
+    label: '',
+    value: null
+}

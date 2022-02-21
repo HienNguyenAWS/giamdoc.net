@@ -1,0 +1,395 @@
+.piecework-payment {
+	min-width: 100%;
+	.button-add {
+		border: 1px dashed rgba(39, 39, 39, 0.3);
+		border-left: unset;
+		box-shadow: -4px 0px 0px 0px #2fce00;
+		margin-left: 4px;
+		margin-top: 16px;
+	}
+	button.ant-btn {
+		margin-bottom: 2px;
+	}
+
+}
+.pop-confirm__btn {
+	margin-bottom: 8px;
+	margin-right: 8px;
+}
+.pop-confirm__tile {
+	margin-left: -22px;
+	margin-top: 8px;
+	padding: 0 8px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	span {
+		margin-right: 4px;
+		color: #FBAC13;
+	}
+}
+.bnl1-popover {
+	display: flex;
+	flex-flow: column;
+	button {
+		text-align: left;
+	}
+	.btn--danger {
+		color: rgba(255, 73, 78, 0.5);
+	}
+}
+
+.piecework-payment__table {
+	// margin-top: 20px;
+	position: relative;
+	border-radius: 2px;
+	background-color: white;
+	min-width: 100%;
+	height: fit-content;
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+	font-size: 12px;
+	color: rgba(39, 39, 39, 0.8);
+	
+
+	.add-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 1;
+		background-color: rgba(0,0,0,0.27);
+	}
+	.header {
+		padding: 20px 12px;
+		padding-right: 20px;
+		display: flex;
+		&__title {
+			color: #272727;
+			font-weight: bold;
+			font-size: 20px;
+			line-height: 23px;
+			opacity: 0.8;
+			flex-grow: 1;
+		}
+	}
+
+	.columnBorderRight {
+		border-right: 1px solid #bebebe;
+	}
+
+	.cellPadddingNone {
+		padding: 0 !important;
+	}
+
+	.ant-menu-item-selected,
+	.ant-menu-item-active {
+		color: rgba(50, 161, 200, 0.8) !important;
+	}
+
+	.ant-menu-item {
+		&:after {
+			border-bottom: none !important;
+		}
+	}
+
+	.ant-table {
+		font-size: 12px;
+	}
+
+	table tbody .ant-table-expanded-row.ant-table-expanded-row-level-1 > td {
+		padding-left: 0px !important;
+		padding-right: 0px !important;
+	}
+
+	.expand-table > div > div > div {
+		width: 100%;
+		margin-left: 0px !important;
+		margin-right: 0px !important;
+	}
+
+	th.ant-table-cell {
+		padding-top: 0;
+		padding-bottom: 0;
+		&:before {
+			display: none;
+		}
+	}
+	tr.ant-table-expanded-row.ant-table-expanded-row-level-1 {
+		display: none;
+	}
+	.cell--border-right {
+		border-right: 1px solid #bebebe;
+	}
+	.cell--border-top {
+		border-top: 1px solid #bebebe;
+		text-align: center;
+	}
+	.cell--min-width-120 {
+		min-width: 120px;
+	}
+	.form-item {
+		margin: 0;
+		display: inline-block;
+		input,
+		textarea {
+			font-size: 12px;
+			line-height: 1;
+			padding: 4px 4px;
+		}
+		& .heSoInput {
+			width: 30px;
+		}
+	}
+
+	.ant-select {
+		width: 70px;
+		font-size: 12px;
+		line-height: 1;
+		padding: 1px 4px;
+	}
+
+	.table__header {
+		display: flex;
+		justify-content: space-between;
+		padding: 4px 16px;
+		padding-right: 8px;
+		.ant-select {
+			width: 200px;
+		}
+		&__text {
+			.ant-select {
+				width: 120px;
+			}
+			font-weight: bold;
+			font-size: 14px;
+		}
+	}
+
+	thead > tr > th {
+		background-color: #daebf7;
+		font-weight: bold;
+		color: #32A1C8CC;
+		height: 24px;
+		padding: 0 4px;
+	}
+	.thead__title-color {
+		color: #E94B4BCC;
+		border-bottom: none;
+	}
+	tbody > tr.ant-table-row-level-0 > td {
+		background-color: #ffffcc !important;
+		color: rgba(39, 39, 39, 0.8);
+	}
+	.row__background-color{
+		background-color: #C6F5F582;
+		;
+	}
+	td.ant-table-cell {
+		height: 24px;
+		padding: 0 4px;
+	}
+
+	.ant-btn-icon-only {
+		margin-bottom: 2px !important;
+		border: none;
+		background: none;
+		height: 20px;
+		width: 20px;
+	}
+
+	.he-so {
+		font-weight: bold;
+		color: rgba(50, 161, 200, 0.8);
+		&__avg {
+			margin-right: 3px;
+		}
+		&__jump {
+			margin-left: 3px;
+			font-style: italic;
+		}
+	}
+
+	.editInput,
+	.ant-input {
+		font-size: 12px;
+		line-height: 1;
+		// padding: 0 4px 0 4px;
+		// &__bac-luong {
+		// 	width: 80px;
+		// }
+		// &__he-so {
+		// 	width: 40px;
+		// 	margin-bottom: 2px;
+		// 	margin-left: 2px;
+		// }
+	}
+	.pc-title {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		&__input {
+			width: 100px;
+			height: 24px;
+			margin-right: 16px;
+		}
+	}
+
+	.add-child-row {
+		text-align: left;
+	}
+	.btn--primary {
+		color: #32A1C8;
+	}
+	.btn--danger {
+		color: rgba(255, 73, 78, 0.5);
+	}
+	.hidden {
+		visibility: hidden;
+	}
+	.visible {
+		visibility: visible;
+	}
+	.delete-child-btn {
+		transition-duration: unset !important;
+	}
+	.index-child-row {
+		margin-left: -16px;
+	}
+	.cell--min-width-70 {
+		min-width: 70px;
+	}
+	.icon--wh10px {
+		height: 10px;
+		width: 10px;
+	}
+	
+	.border-0 {
+		border: none;
+	}
+	
+	.bg-0 {
+		background: none;
+		background-color: none;
+	}
+	
+	.mr-auto{
+		margin-right: auto;
+	}
+	
+	.ml-auto{
+		margin-left: auto;
+	}
+	
+	.mr-5px{
+		margin-right: 5px;
+	}
+	
+	.mb-5px {
+		margin-bottom: 5px;
+	}
+	
+	.pr-15px{
+		padding-right: 15px;
+	}
+	
+	.txt-right{
+		text-align: left;
+	}
+	
+	.txt-center{
+		text-align: center;
+	}
+	
+	.flex-column{
+		flex-direction: column;
+	}
+	
+	.flex-row{
+		flex-direction: row;
+	}
+	
+	.jus-content{
+		&--right{
+			justify-content: right;
+		}
+		&--center{
+			justify-content: center;
+		}
+	}
+	
+	.visible{
+		&--hidden{
+			visibility: hidden;
+		}
+	}
+	.pl-20px{
+		padding-left: 20px;
+	}
+	.btn {
+		&__editInstant {
+			height: 20px;
+			width: 20px;
+			justify-content: center;
+			&--width-50px{
+				width: 50px;
+			}
+		}
+		&__editInstant:hover {
+			background: none;
+		}
+		&--wh10px{
+			width: 10px !important;
+			height: 10px !important;
+		}
+		&__editTitle {
+			height: 20px;
+			width: 20px;
+			justify-content: center;
+			&--width-50px{
+				width: 50px;
+			}
+		}
+	}
+
+	.title__infor{
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	
+	.input{
+		&__inforEdit{
+			padding: 0;
+			width: 55%;
+			
+		}
+		&__wattageEdit{
+			padding: 0;
+			width: 55%;
+		}
+		&__budgetEdit{
+			padding: 0;
+			width: 55%;
+		}
+		&__cellEdit{
+			padding: 0;
+			width: 95%;
+			text-align: center;
+		}
+		// &__tenSpEdit{
+		// 	padding: 0;
+		// 	width: 95%;
+		// }
+		// &__DVTEdit{
+		// 	padding: 0 0 0 20px;
+		// 	width: 95%;
+		// }
+	}
+	
+	.input--hideArrow[type=number]::-webkit-inner-spin-button,
+	.input--hideArrow[type=number]::-webkit-outer-spin-button{
+		-webkit-appearance: none; 
+	  margin: 0; 
+	}
+}
+

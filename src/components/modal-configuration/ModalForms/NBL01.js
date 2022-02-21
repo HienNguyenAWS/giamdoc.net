@@ -15,7 +15,7 @@ const NBL01 = ({ recordInfo, setData, save, setVisible, cancel, setLuongKhoiDiem
     const [status, setStatus] = useState(1)
     // const [indeterminate, setIndeterminate] = React.useState(true)
     // const [checkAll, setCheckAll] = React.useState(false)
-
+    const [error, setError] = useState(false)
     const [form] = Form.useForm()
     const inputCoefficientErrorRef = useRef(null)
     const inputJumpErrorRef = useRef(null)
@@ -42,18 +42,22 @@ const NBL01 = ({ recordInfo, setData, save, setVisible, cancel, setLuongKhoiDiem
             if (b1 <= 0) {
                 errorCoefficientRef.current.classList.remove('d-none')
                 inputCoefficientErrorRef.current.classList.add('input__error')
+                setError(true)
             } else {
                 errorCoefficientRef.current.classList.add('d-none')
                 inputCoefficientErrorRef.current.classList.remove('input__error')
+                setError(false)
             }
         }
         else {
             if (coefficient <= 0) {
                 errorCoefficientRef.current.classList.remove('d-none')
                 inputCoefficientErrorRef.current.classList.add('input__error')
+                setError(true)
             } else {
                 errorCoefficientRef.current.classList.add('d-none')
                 inputCoefficientErrorRef.current.classList.remove('input__error')
+                setError(false)
             }
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -71,18 +75,22 @@ const NBL01 = ({ recordInfo, setData, save, setVisible, cancel, setLuongKhoiDiem
             if (b1 <= 0) {
                 errorJumpRef.current.classList.remove('d-none')
                 inputJumpErrorRef.current.classList.add('input__error')
+                setError(true)
             } else {
                 errorJumpRef.current.classList.add('d-none')
                 inputJumpErrorRef.current.classList.remove('input__error')
+                setError(false)
             }
         }
         else {
             if (jump <= 0) {
                 errorCoefficientRef.current.classList.remove('d-none')
                 inputCoefficientErrorRef.current.classList.add('input__error')
+                setError(true)
             } else {
                 errorCoefficientRef.current.classList.add('d-none')
                 inputCoefficientErrorRef.current.classList.remove('input__error')
+                setError(false)
             }
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -268,7 +276,7 @@ const NBL01 = ({ recordInfo, setData, save, setVisible, cancel, setLuongKhoiDiem
             <Divider />
 
             <Form.Item className="modal-footer" style={{ marginBottom: '0' }}>
-                <Button type="primary" htmlType="submit" style={{ marginRight: '8px' }}>
+                <Button type="primary" htmlType="submit" style={{ marginRight: '8px' }} disabled={error}>
                     Update
                 </Button>
                 <Button htmlType="button" onClick={onClose}>

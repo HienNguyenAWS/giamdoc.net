@@ -877,7 +877,7 @@ export const useColumns = ({
         if (childKey && !editPC) {
             return (
                 <div className="ml-17px">
-                    <span className="mr-5px">{text == null ? 
+                    <span className="mr-5px">{text == null ?
                     data[parentKey -1].phuCapDefault
                     : text}</span>
                     <Pen

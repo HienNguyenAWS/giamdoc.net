@@ -6,7 +6,7 @@ const CheckboxGroup = Checkbox.Group
 const plainOptions = ['Giám đốc', 'Trợ lý giám đốc', 'Quản lý điều hành', 'Nhân viên']
 const defaultCheckedList = ['Giám đốc']
 
-const NBL02 = ( { recordInfo, setData, save, setVisible, cancel , setLuongKhoiDiem, initialSalary, setInitialSalary }) => {
+const NBL02 = ( { recordInfo, setData, save, setVisible, cancel, setLuongKhoiDiem, initialSalary, setInitialSalary }) => {
     const [initialSalary1, setInitialSalary1] = useState(initialSalary[0].value)
     const [initialSalary2, setInitialSalary2] = useState(initialSalary[1].value)
     const [coefficient, setCoefficient] = useState(recordInfo.coefficient[0])

@@ -16,14 +16,14 @@ export const data = [
         nangsuat: 'SP/Giờ',
         ghiChu: 'Phương pháp thống kê và tính lương',
         children: [
-            {
-                key: 'special',
-                name:'Quản lý công đoạn / Chuyền / Tổ máy',
-                index: '1.0',
-                tensp:'',
-                dvt:'',
-                chuan:''
-            },
+            // {
+            //     key: 'special',
+            //     name:'Quản lý công đoạn / Chuyền / Tổ máy',
+            //     index: '1.0',
+            //     tensp:'',
+            //     dvt:'',
+            //     chuan:''
+            // },
             {
                 key: '1.1',
                 name:'Tên công việc / vị trí / yêu cầu',

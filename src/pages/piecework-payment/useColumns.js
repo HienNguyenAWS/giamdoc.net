@@ -184,9 +184,10 @@ export const useColumns = ({
                         trigger={editingKey === '' ? 'click' : ''}
                     >
                         <Button icon={<MoreOutlined />} type='text' disabled={editingKey !== '' }
-                        style = {{'margin-left':'-16px'}}
-                        className={record.key === 'special' ? 'hidden' : 'visible'} />
-                        {record.index}
+                        // style = {{'margin-left':'-16px'}}
+                        // className={record.key === 'special' ? 'hidden' : 'visible'} 
+                        />
+                        {record.key}
                     </Popover>
                 </Space>
             )
@@ -268,21 +269,21 @@ export const useColumns = ({
     const [editName, setEditName] = useState(false)
     const renderName= (text, record ) => {
         const [parentKey, childKey] = record.key.split('.')
-        if (childKey && !editName) {
+        if ((parentKey||childKey) && !editName) {
             return <div className ='title__infor' >
                 <span>{text}</span>
                 <Button className='btn__editInstant border-0' icon={<Pen></Pen>} onClick={() => {setKeyEdit(record.key)
                     setEditName(true)}} style={(record.index !== 'add') ? { opacity : '1' } : { opacity: '0' }}></Button>
             </div>
         }
-        if (parentKey && !editName) {
-            return <div className ='title__infor' >
-                <span>{text}</span>
-                <Button className='btn__editInstant border-0' icon={<Pen></Pen>} onClick={() => {setKeyEdit(record.key)
-                    setEditName(true)}} style={(record.index !== 'add') ? { opacity : '1' } : { opacity: '0' }}></Button>
-            </div>
-        }
-        if (parentKey && editName && keyEdit == record.key) {
+        // if (parentKey && !editName) {
+        //     return <div className ='title__infor' >
+        //         <span>{text}</span>
+        //         <Button className='btn__editInstant border-0' icon={<Pen></Pen>} onClick={() => {setKeyEdit(record.key)
+        //             setEditName(true)}} style={(record.index !== 'add') ? { opacity : '1' } : { opacity: '0' }}></Button>
+        //     </div>
+        // }
+        if (!childKey && editName && keyEdit == record.key) {
             return (
                 <div className="d-flex flex-row">
                     <Input
@@ -328,6 +329,7 @@ export const useColumns = ({
                         value={text}
                         onChange={(e) => {
                             setDataValue(`${parentKey}.children.${childKey}.name`, e.target.value)
+                            console.log(`${parentKey}.children.${childKey}.name`)
                         }}
                     />
                     <div className="d-flex flex-column mr-0 ml-auto">
@@ -790,7 +792,7 @@ export const useColumns = ({
                     setEditDinhBien(true)}} style={(hoverKey == record.key && hoverDinhBien && record.index !== 'add') ? { opacity : '1' } : { opacity: '0' }}></Button>
             </div>
         }
-        if (parentKey && editDinhBien && keyEdit == record.key) {
+        if (!childKey && editDinhBien && keyEdit == record.key) {
             return (
                 <div className="d-flex flex-row">
                     <Input

@@ -15,14 +15,14 @@ const PWDefault = {
     nangsuat: 'SP/Giờ',
     ghiChu: 'Phương pháp thống kê và tính lương',
     children: [
-        {
-            key: 'special',
-            name:'Quản lý công đoạn / Chuyền / Tổ máy',
-            index: '',
-            tensp:'',
-            dvt:'',
-            chuan:''
-        },
+        // {
+        //     key: 'special',
+        //     name:'Quản lý công đoạn / Chuyền / Tổ máy',
+        //     index: '',
+        //     tensp:'',
+        //     dvt:'',
+        //     chuan:''
+        // },
         {
             key: '1.1',
             name:'Tên công việc / vị trí / yêu cầu',
@@ -91,7 +91,7 @@ export const generateNewPW = data => {
     newPW.key = `${data.length + 1}`
     newPW.index = newPW.key
     newPW.children.forEach((e, idx, arr) => {
-        e.key = `${newPW.key}.${idx}`
+        e.key = `${newPW.key}.${idx+1}`
         e.index = idx === arr.length - 1 ? 'add' : e.key
     })
     return newPW

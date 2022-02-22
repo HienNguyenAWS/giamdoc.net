@@ -15,12 +15,11 @@ import { ReactComponent as CheckIcon } from './icons/check.svg'
 import { ReactComponent as CloseIcon } from './icons/close.svg'
 import { deletePayGrade } from './PayGrades03.action'
 import styles from './SalaryGrade03Table.module.scss'
-// import ModalConfiguration3 from 'components/modal-configuration/ModalConfiguration3'
-// import NBL03 from 'components/modal-configuration/ModalForms/NBL03'
+import NBL03 from 'components/modal-configuration/ModalForms/NBL03'
 
 const WithActiveAddIcon = withActiveIcon(AddIcon)
 
-const getCloneCols = cols => cols.map(e => ({ ...e }))
+const getCloneCols = (cols) => cols.map((e) => ({ ...e }))
 
 const createColumnsMock = ({ level, amplitude, coefficient }) => {
     const columnsMock = []
@@ -105,7 +104,7 @@ const createSummaryRow = ({ columnsData, rows, summaryTable, setSummaryTable }) 
 const mapRowsDataByConfig = ({ salary, salaryConfigs, rowsData }) => {
     const defaultSalaryKeys = ['lcb', 'lkpi', 'lvt']
 
-    return rowsData.map(rowData => {
+    return rowsData.map((rowData) => {
         switch (rowData.rules.key) {
             case 'lcb': {
                 rowData.rules.title = 'LKĐ hoặc LTT'
@@ -173,7 +172,7 @@ const createRestRows = ({ salary, columnsData, rowsData, summaryTable, setSummar
             amplitudeAndCoefficient
         }
 
-        columnsData.forEach(columnData => {
+        columnsData.forEach((columnData) => {
             restRow = {
                 ...restRow,
                 ...calcSalaryByLevel({ row, columnData })
@@ -239,7 +238,7 @@ const createAmplitudeAndCoefficient = ({
                 dataIndex: key,
                 align: 'center',
 
-                onHeaderCell: column => ({
+                onHeaderCell: (column) => ({
                     onMouseEnter: () => {
                         setLevelSalaryDataIndex(column.dataIndex)
                     },
@@ -248,7 +247,7 @@ const createAmplitudeAndCoefficient = ({
                     }
                 }),
 
-                render: text => text?.label
+                render: (text) => text?.label
             }
         ]
     })
@@ -266,7 +265,7 @@ const createAmplitudeAndCoefficient = ({
     ]
 }
 
-const isExistClickedColumn = titleTableList => {
+const isExistClickedColumn = (titleTableList) => {
     for (const key in titleTableList) {
         if (titleTableList[key].isClicked) {
             return true
@@ -311,9 +310,9 @@ const createColumns = ({
                         <div className={styles.flexCenterVertical}>
                             <Input
                                 autoFocus
-                                onFocus={event => event.target.select()}
+                                onFocus={(event) => event.target.select()}
                                 value={titleTableList.code.title}
-                                onChange={event => {
+                                onChange={(event) => {
                                     const newTitleTableList = JSON.parse(JSON.stringify(titleTableList))
                                     newTitleTableList.code.title = event.target.value
                                     setTitleTableList(newTitleTableList)
@@ -356,9 +355,9 @@ const createColumns = ({
                 <div className={styles.flexCenterVertical}>
                     <Input
                         autoFocus
-                        onFocus={event => event.target.select()}
+                        onFocus={(event) => event.target.select()}
                         value={titleTableList.code.title}
-                        onChange={event => {
+                        onChange={(event) => {
                             const newTitleTableList = JSON.parse(JSON.stringify(titleTableList))
                             newTitleTableList.code.title = event.target.value
                             setTitleTableList(newTitleTableList)
@@ -389,14 +388,14 @@ const createColumns = ({
 
             onHeaderCell: () => ({
                 onMouseEnter: () => {
-                    setTitleTableList(preState => {
+                    setTitleTableList((preState) => {
                         const newTitleTableList = JSON.parse(JSON.stringify(preState))
                         newTitleTableList.code.isHovered = true
                         return newTitleTableList
                     })
                 },
                 onMouseLeave: () => {
-                    setTitleTableList(preState => {
+                    setTitleTableList((preState) => {
                         const newTitleTableList = JSON.parse(JSON.stringify(preState))
                         newTitleTableList.code.isHovered = false
                         return newTitleTableList
@@ -410,9 +409,9 @@ const createColumns = ({
                         <div className={styles.flexCenterVertical}>
                             <Input
                                 autoFocus
-                                onFocus={event => event.target.select()}
+                                onFocus={(event) => event.target.select()}
                                 value={text}
-                                onChange={event => {
+                                onChange={(event) => {
                                     setDataValue('setTitleTable', event.target.value)
                                 }}
                             />
@@ -448,7 +447,7 @@ const createColumns = ({
                                     content={
                                         <div className={styles.bnl1Popover}>
                                             <Button
-                                                type='text'
+                                                type="text"
                                                 danger
                                                 onClick={() => {
                                                     setVisiable(false)
@@ -462,13 +461,13 @@ const createColumns = ({
                                                 onClick={() => {
                                                     setVisiable(false)
                                                 }}
-                                                type='text'
+                                                type="text"
                                             />
                                         </div>
                                     }
-                                    trigger='click'
+                                    trigger="click"
                                 >
-                                    <Button icon={<MoreOutlined />} type='text' />
+                                    <Button icon={<MoreOutlined />} type="text" />
                                 </Popover>
                             </div>
                         )
@@ -514,9 +513,9 @@ const createColumns = ({
                         <div className={styles.flexCenterVertical}>
                             <Input
                                 autoFocus
-                                onFocus={event => event.target.select()}
+                                onFocus={(event) => event.target.select()}
                                 value={text}
-                                onChange={event => {
+                                onChange={(event) => {
                                     if (index === rowsData.length + 2) {
                                         setDataValue('setSummaryTable', event.target.value)
                                     } else {
@@ -562,9 +561,9 @@ const createColumns = ({
                         <div className={styles.flexCenterVertical}>
                             <Input
                                 autoFocus
-                                onFocus={event => event.target.select()}
+                                onFocus={(event) => event.target.select()}
                                 value={titleTableList.rules.title}
-                                onChange={event => {
+                                onChange={(event) => {
                                     const newTitleTableList = JSON.parse(JSON.stringify(titleTableList))
                                     newTitleTableList.rules.title = event.target.value
                                     setTitleTableList(newTitleTableList)
@@ -607,9 +606,9 @@ const createColumns = ({
                 <div className={styles.flexCenterVertical}>
                     <Input
                         autoFocus
-                        onFocus={event => event.target.select()}
+                        onFocus={(event) => event.target.select()}
                         value={titleTableList.rules.title}
-                        onChange={event => {
+                        onChange={(event) => {
                             const newTitleTableList = JSON.parse(JSON.stringify(titleTableList))
                             newTitleTableList.rules.title = event.target.value
                             setTitleTableList(newTitleTableList)
@@ -639,14 +638,14 @@ const createColumns = ({
 
             onHeaderCell: () => ({
                 onMouseEnter: () => {
-                    setTitleTableList(preState => {
+                    setTitleTableList((preState) => {
                         const newTitleTableList = JSON.parse(JSON.stringify(preState))
                         newTitleTableList.rules.isHovered = true
                         return newTitleTableList
                     })
                 },
                 onMouseLeave: () => {
-                    setTitleTableList(preState => {
+                    setTitleTableList((preState) => {
                         const newTitleTableList = JSON.parse(JSON.stringify(preState))
                         newTitleTableList.rules.isHovered = false
                         return newTitleTableList
@@ -673,7 +672,7 @@ const createColumns = ({
             fixed: 'left',
             width: 120,
 
-            render: text => {
+            render: (text) => {
                 if (text) {
                     return (
                         <div className={styles.lightColor}>
@@ -689,7 +688,7 @@ const createColumns = ({
                                                 marginLeft: 3
                                             }}
                                             onClick={() => {
-                                                setAmplitudeAndCoefficient(preState => {
+                                                setAmplitudeAndCoefficient((preState) => {
                                                     const newState = JSON.parse(JSON.stringify(preState))
                                                     newState.amplitude.isClicked = true
                                                     return newState
@@ -708,7 +707,7 @@ const createColumns = ({
                                                 marginLeft: 3
                                             }}
                                             onClick={() => {
-                                                setAmplitudeAndCoefficient(preState => {
+                                                setAmplitudeAndCoefficient((preState) => {
                                                     const newState = JSON.parse(JSON.stringify(preState))
                                                     newState.coefficient.isClicked = true
                                                     return newState
@@ -726,9 +725,9 @@ const createColumns = ({
                             >
                                 <Input
                                     autoFocus
-                                    onFocus={event => event.target.select()}
+                                    onFocus={(event) => event.target.select()}
                                     value={text.amplitude.isClicked ? text.amplitude.title : text.coefficient.title}
-                                    onChange={event => {
+                                    onChange={(event) => {
                                         text.amplitude.isClicked
                                             ? setDataValue('setAmplitude', event.target.value)
                                             : setDataValue('setCoefficient', event.target.value)
@@ -767,7 +766,6 @@ const SalaryGrade03Table = ({ id, titleTable: _titleTable, ...restProps }) => {
         },
         pc1: {
             title: 'Tiền ăn trưa',
-            percent: 0,
             value: 190000
         }
     })
@@ -793,14 +791,14 @@ const SalaryGrade03Table = ({ id, titleTable: _titleTable, ...restProps }) => {
     })
     const titleTableListRef = useRef(JSON.parse(JSON.stringify(titleTableList)))
 
-    const handleTitleTableSave = columnName => {
+    const handleTitleTableSave = (columnName) => {
         const newTitleTableList = JSON.parse(JSON.stringify(titleTableList))
         newTitleTableList[columnName].isClicked = false
         newTitleTableList[columnName].isHovered = false
         titleTableListRef.current = newTitleTableList
         setTitleTableList(newTitleTableList)
     }
-    const handleTitleTableCancel = columnName => {
+    const handleTitleTableCancel = (columnName) => {
         titleTableListRef.current[columnName].isClicked = false
         titleTableListRef.current[columnName].isHovered = false
         setTitleTableList(titleTableListRef.current)
@@ -869,21 +867,21 @@ const SalaryGrade03Table = ({ id, titleTable: _titleTable, ...restProps }) => {
         setVisiableAddRow(true)
     }
 
-    const handleDeleteRow = index => {
+    const handleDeleteRow = (index) => {
         Modal.confirm({
             title: 'Confirm delete',
             icon: <ExclamationCircleOutlined />,
             content: 'Are you sure to delete this row?',
             okText: 'Confirm',
             cancelText: 'Cancel',
-            onOk: close => {
+            onOk: (close) => {
                 setRowsData([...rowsData].filter((rowData, dataIndex) => dataIndex !== index - 1))
                 close()
             }
         })
     }
 
-    const handleAddRowSubmit = formValues => {
+    const handleAddRowSubmit = (formValues) => {
         const rowData = {
             code: 'N1-LCB',
             title: formValues.title,
@@ -908,7 +906,7 @@ const SalaryGrade03Table = ({ id, titleTable: _titleTable, ...restProps }) => {
             }
 
             case 'setAmplitude': {
-                setAmplitudeAndCoefficient(preState => {
+                setAmplitudeAndCoefficient((preState) => {
                     const newState = JSON.parse(JSON.stringify(preState))
                     newState.amplitude.title = value
                     return newState
@@ -917,7 +915,7 @@ const SalaryGrade03Table = ({ id, titleTable: _titleTable, ...restProps }) => {
             }
 
             case 'setCoefficient': {
-                setAmplitudeAndCoefficient(preState => {
+                setAmplitudeAndCoefficient((preState) => {
                     const newState = JSON.parse(JSON.stringify(preState))
                     newState.coefficient.title = value
                     return newState
@@ -970,7 +968,7 @@ const SalaryGrade03Table = ({ id, titleTable: _titleTable, ...restProps }) => {
             content: 'Are you sure to delete this section?',
             okText: 'Confirm',
             cancelText: 'Cancel',
-            onOk: close => {
+            onOk: (close) => {
                 dispatch(deletePayGrade(id))
                 close()
             }
@@ -1065,10 +1063,10 @@ const SalaryGrade03Table = ({ id, titleTable: _titleTable, ...restProps }) => {
             `.${styles.salaryGrade03} tbody > tr:nth-child(2) > td:nth-child(2)`
         )
 
-        colspanElements.forEach(element => {
+        colspanElements.forEach((element) => {
             element.setAttribute('colspan', 2)
         })
-        hiddenElements.forEach(element => {
+        hiddenElements.forEach((element) => {
             element.style.display = 'none'
         })
     })
@@ -1094,64 +1092,48 @@ const SalaryGrade03Table = ({ id, titleTable: _titleTable, ...restProps }) => {
             />
 
             <Modal
-                title='Thêm dữ liệu'
+                title="Thêm dữ liệu"
                 visible={visiableAddRow}
-                okText='Thêm'
-                cancelText='Huỷ'
+                okText="Thêm"
+                cancelText="Huỷ"
                 onOk={handleAddrowOk}
                 onCancel={handleAddrowCancel}
             >
                 <Form onFinish={handleAddRowSubmit} form={form}>
                     <Form.Item
-                        label='Tiêu đề'
-                        name='title'
+                        label="Tiêu đề"
+                        name="title"
                         rules={[{ required: true, message: 'Tiêu đề không được để trống!' }]}
                     >
                         <Input />
                     </Form.Item>
 
                     <Form.Item
-                        label='Quy tắc'
-                        name='rule'
+                        label="Quy tắc"
+                        name="rule"
                         rules={[{ required: true, message: 'Quy tắc không được để trống!' }]}
                     >
-                        <Select placeholder='Chọn quy tắc tính lương'>
-                            <Select.Option value='LKĐ / hoặc LTT'>LKĐ / hoặc LTT</Select.Option>
-                            <Select.Option value='VD: 30% LCB'>VD: 30% LCB</Select.Option>
-                            <Select.Option value='LVT'>LVT</Select.Option>
+                        <Select placeholder="Chọn quy tắc tính lương">
+                            <Select.Option value="LKĐ / hoặc LTT">LKĐ / hoặc LTT</Select.Option>
+                            <Select.Option value="VD: 30% LCB">VD: 30% LCB</Select.Option>
+                            <Select.Option value="LVT">LVT</Select.Option>
                         </Select>
                     </Form.Item>
 
                     <Form.Item style={{ display: 'none' }}>
-                        <Button ref={submitAddRowBtnRef} htmlType='submit' />
+                        <Button ref={submitAddRowBtnRef} htmlType="submit" />
                     </Form.Item>
                 </Form>
             </Modal>
 
-            {/* <ModalConfiguration3
-                visible={visible}
-                setVisible={setVisible}
-                title={`Configuration ${obj.children}`}
-                onCancel={() => setVisible(false)}
-                recordInfo={record}
-                setData={setDataValue}
-                save={save}
-                cancel={cancel}
-                luongKhoiDiem={luongKhoiDiem}
-                setLuongKhoiDiem={setLuongKhoiDiem}
-                initialSalary={initialSalary}
-                setInitialSalary={setInitialSalary}
-            /> */}
-            {/* <ModalConfiguration3 /> */}
-
-            {/* <Modal title='Thêm dữ liệu' visible okText='Thêm' cancelText='Huỷ'>
-                // <NBL03
+            <Modal visible={false} title="Cấu hình ngạch bậc lương 03" footer={null}>
+                <NBL03
                     salary={salary}
                     setSalary={setSalary}
                     salaryConfigs={salaryConfigs}
                     setSalaryConfigs={setSalaryConfigs}
                 />
-            </Modal> */}
+            </Modal>
         </>
     )
 }

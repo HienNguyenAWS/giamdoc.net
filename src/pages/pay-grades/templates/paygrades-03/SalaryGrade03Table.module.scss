@@ -146,3 +146,18 @@
         visibility: hidden;
     }
 }
+
+.flexCenter {
+    display: flex;
+    align-items: center;
+}
+
+.formItemMarginBottom4 {
+    margin-bottom: 4px;
+}
+
+.hiddenFormLabel {
+    & label {
+        display: none;
+    }
+}

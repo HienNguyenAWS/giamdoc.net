@@ -5,6 +5,7 @@ import 'pages/pay-grades/PayGrades.scss'
 import React, { useEffect, useRef, useState } from 'react'
 import { generateNewChild, generateNewNL } from 'utils/PayGradesHelper'
 import { useColumns } from './useColumns'
+import { Data } from '@react-google-maps/api'
 
 const { Option } = Select
 
@@ -118,7 +119,7 @@ const PayGrades01 = () => {
     }
 
     const onClickAddNewNL = () => {
-        const newNL = generateNewNL(data)
+        const newNL = generateNewNL(data, pcCols)
         edit(newNL)
         setData(getCloneData([...data, newNL]))
         setAddMode(true)
@@ -166,8 +167,9 @@ const PayGrades01 = () => {
 
     const addNewPcCol = () => {
         const nextKey = ++countPcCols.current
-        setPcCols([...pcCols, { key: nextKey, title: `Phụ cấp ${nextKey}` }])
-        setData(data.map(e => ({ ...e, [`phuCapUnit${nextKey}`]: '%', [`phuCapValue${nextKey}`]: 'PC' })))
+        setPcCols([...pcCols, { key: nextKey, title: 'Phụ cấp' }])
+        setData(data.map(e => ({ ...e, [`phuCapUnit${nextKey}`]: '%', [`phuCapValue${nextKey}`]: 'PC', children: e.children.map((c) => ({...c, [`phuCapUnit${nextKey}`]: null })) })))
+
     }
 
     const updatePcColTitle = (key, val) => {
@@ -251,6 +253,10 @@ const PayGrades01 = () => {
         // filterData.push(data[1])
         setData(filterData)
     }
+
+    useEffect(() => {
+        console.log(data)
+    }, [data])
 
     return (
         <div className='bang-ngach-luong-1'>

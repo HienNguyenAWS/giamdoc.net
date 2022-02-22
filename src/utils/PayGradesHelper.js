@@ -164,23 +164,32 @@ export const formatCurrency = number => {
     return str.replace(/\,/g, '.')
 }
 
-export const generateNewNL = data => {
+export const generateNewNL = (data, pcCols) => {
     // eslint-disable-next-line no-debugger
     const newNL = NLDefault
     newNL.key = `${data.length + 1}`
     newNL.index = newNL.key
     newNL.applyFor = []
     newNL.loaiHeSo = 1
+    newNL.lcbDefault = 70
+    newNL.kpiDefault = 30
+    newNL.phuCapDefault = 40
+    pcCols.forEach((col) => {
+        newNL[`phuCapUnit${col.key}`] = '%'
+        newNL[`phuCapValue${col.key}`] = 'PC'
+    })
     newNL.children.forEach((e, idx, arr) => {
         e.key = `${newNL.key}.${idx + 1}`
         e.index = idx === arr.length - 1 ? 'add' : e.key
         e.heSo = idx === arr.length - 1 ? undefined : 1
-        e.lcbPercent = idx === arr.length - 1 ? undefined : 30
+        e.lcbPercent = idx === arr.length - 1 ? undefined : null
         e.lcb = idx === arr.length - 1 ? undefined : 0
-        e.kpiPercent = idx === arr.length - 1 ? undefined : 30
+        e.kpiPercent = idx === arr.length - 1 ? undefined : null
         e.lkpi = idx === arr.length - 1 ? undefined : 0
-        e.phuCapUnit1 = idx === arr.length - 1 ? undefined : 30
-        e.phuCapValue1 = idx === arr.length - 1 ? undefined : 0
+        pcCols.forEach((col) => {
+            e[`phuCapUnit${col.key}`] = idx === arr.length - 1 ? undefined : null
+            e[`phuCapValue${col.key}`] = idx === arr.length - 1 ? undefined : 0
+        })
         e.bacLuong = idx === arr.length - 1 ? undefined : ''
         e.tong = idx === arr.length - 1 ? undefined : 0
         e.ghiChu = idx === arr.length - 1 ? undefined : ''
